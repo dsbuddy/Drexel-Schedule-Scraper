@@ -3,7 +3,6 @@
 var request = require('request');
 var cheerio = require('cheerio');
 const HtmlTableToJson = require('html-table-to-json');
-var courses = require('./courses');
 
 
 const getTerms = new Promise((resolve, reject)=>{
@@ -134,7 +133,6 @@ const getCourses = (termList) => {
 								reject("Failed in getCourses");
 							}
 							var $ ="";
-
 							try{
 								$ = cheerio.load(body); //THIS SOMETIMES TIMES OUT SO BECAREFUL
 							} catch(error){
@@ -156,17 +154,17 @@ const getCourses = (termList) => {
 							}
 
 							/* Removes extraneous elements */
-							for (var i=0; parsedTable[max] != undefined && i<parsedTable[max].length; i++){ // added the undefined comparison as it kept throwing errorrs(I think the table is empty sometimes)
-								if (Object.keys(parsedTable[max][i]).length > 10 && Object.keys(parsedTable[max][i]).length < 14){
-									parsedTable[max][i] = swap(parsedTable[max][i], String(Object.keys(parsedTable[max][i]).length), "8")
-									delete parsedTable[max][i][Object.keys(parsedTable[max][i]).length];
+							for (var l=0; parsedTable[max] != undefined && l<parsedTable[max].length; l++){ // added the undefined comparison as it kept throwing errorrs(I think the table is empty sometimes)
+								if (Object.keys(parsedTable[max][l]).length > 10 && Object.keys(parsedTable[max][l]).length < 14){
+									parsedTable[max][l] = swap(parsedTable[max][l], String(Object.keys(parsedTable[max][l]).length), "8")
+									delete parsedTable[max][l][Object.keys(parsedTable[max][l]).length];
 									var times = '';
 
 									/* Formats day and time */
-									for (var j=9; j<Object.keys(parsedTable[max][i]).length; j+=2){
-										times+=(parsedTable[max][i][j]+ '   ' + parsedTable[max][i][j+1] + '    ');
+									for (var m=9; m<Object.keys(parsedTable[max][i]).length; m+=2){
+										times+=(parsedTable[max][l][m]+ '   ' + parsedTable[max][l][m+1] + '    ');
 									}
-									var a = parsedTable[max][i];
+									var a = parsedTable[max][l];
 									
 									/* Creates class with class details */
 									var temp = new Course(a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], times);
@@ -174,7 +172,7 @@ const getCourses = (termList) => {
 								}
 							}
 							resolve(classes);
-						})
+						});
 					}));
 				}
 			}
