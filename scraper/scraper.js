@@ -119,84 +119,97 @@ function combineSubjects(termList, subjects) {
 }
 
 
-const getCourses = (termList) => {
-	return new Promise((resolve, reject)=>{
-		var promiseArray = [];
-		for (var i=0; i<termList.length; i++) {
-			for(var j=0; j<termList[i].colleges.length; j++){
-				for(var k=0; k<termList[i].colleges[j].subjects.length; k++){
-					promiseArray.push(new Promise((resolve,reject) =>{
-						request(termList[i].colleges[j].subjects[k].link, function(error, response, body) {//fix in here
-										//looks like the links are right but  idk how the rest works
-							if(error) {
-								console.log("Error: " + error);
-								reject("Failed in getCourses");
-							}
-							var $ ="";
-							try{
-								$ = cheerio.load(body); //THIS SOMETIMES TIMES OUT SO BECAREFUL
-							} catch(error){
-								$ = "";
-							}
+// const getCourses = (termList) => {
+// 	return new Promise((resolve, reject)=>{
+// 		var promiseArray = [];
+// 		for (var i=0; i<termList.length; i++) {
+// 			for(var j=0; j<termList[i].colleges.length; j++){
+// 				for(var k=0; k<termList[i].colleges[j].subjects.length; k++){
+// 					promiseArray.push(new Promise((resolve,reject) =>{
+// 						request(termList[i].colleges[j].subjects[k].link, function(error, response, body) {//fix in here
+// 										//looks like the links are right but  idk how the rest works
+// 							if(error) {
+// 								console.log("Error: " + error);
+// 								reject("Failed in getCourses");
+// 							}
+// 							var $ ="";
+// 							try{
+// 								$ = cheerio.load(body); //THIS SOMETIMES TIMES OUT SO BECAREFUL
+// 							} catch(error){
+// 								$ = "";
+// 							}
 
-							/* Converts table of courses JSON */
-							var tableHTML = $('table').attr('bgcolor', '#cccccc').html();
-							const html = String(tableHTML);
-							const jsonTables = new HtmlTableToJson(html);
-							var parsedTable = jsonTables['results'];
-							var classes = [];
-							/* Finds correct JSON array */
-							var max = 0;
-							for (var i=0; i<parsedTable.length; i++){
-								if (parsedTable[i].length > parsedTable[max].length){
-									max = i;
-								}
-							}
+// 							/* Converts table of courses JSON */
+// 							var tableHTML = $('table').attr('bgcolor', '#cccccc').html();
+// 							const html = String(tableHTML);
+// 							const jsonTables = new HtmlTableToJson(html);
+// 							var parsedTable = jsonTables['results'];
+// 							var classes = [];
+// 							/* Finds correct JSON array */
+// 							var max = 0;
+// 							for (var i=0; i<parsedTable.length; i++){
+// 								if (parsedTable[i].length > parsedTable[max].length){
+// 									max = i;
+// 								}
+// 							}
 
-							/* Removes extraneous elements */
-							for (var l=0; parsedTable[max] != undefined && l<parsedTable[max].length; l++){ // added the undefined comparison as it kept throwing errorrs(I think the table is empty sometimes)
-								if (Object.keys(parsedTable[max][l]).length > 10 && Object.keys(parsedTable[max][l]).length < 14){
-									parsedTable[max][l] = swap(parsedTable[max][l], String(Object.keys(parsedTable[max][l]).length), "8")
-									delete parsedTable[max][l][Object.keys(parsedTable[max][l]).length];
-									var times = '';
+// 							/* Removes extraneous elements */
+// 							for (var l=0; parsedTable[max] != undefined && l<parsedTable[max].length; l++){ // added the undefined comparison as it kept throwing errorrs(I think the table is empty sometimes)
+// 								if (Object.keys(parsedTable[max][l]).length > 10 && Object.keys(parsedTable[max][l]).length < 14){
+// 									parsedTable[max][l] = swap(parsedTable[max][l], String(Object.keys(parsedTable[max][l]).length), "8")
+// 									delete parsedTable[max][l][Object.keys(parsedTable[max][l]).length];
+// 									var times = '';
 
-									/* Formats day and time */
-									for (var m=9; m<Object.keys(parsedTable[max][i]).length; m+=2){
-										times+=(parsedTable[max][l][m]+ '   ' + parsedTable[max][l][m+1] + '    ');
-									}
-									var a = parsedTable[max][l];
+// 									/* Formats day and time */
+// 									for (var m=9; m<Object.keys(parsedTable[max][i]).length; m+=2){
+// 										times+=(parsedTable[max][l][m]+ '   ' + parsedTable[max][l][m+1] + '    ');
+// 									}
+// 									var a = parsedTable[max][l];
 									
-									/* Creates class with class details */
-									var temp = new Course(a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], times);
-									classes.push(temp.toJSON());
-								}
-							}
-							resolve(classes);
-						});
-					}));
-				}
-			}
-		}
-		Promise.all(promiseArray).then((allCourses)=>{resolve(combineCourses(termList,allCourses))},reject);
+// 									/* Creates class with class details */
+// 									var temp = new Course(a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], times);
+// 									classes.push(temp.toJSON());
+// 								}
+// 							}
+// 							resolve(classes);
+// 						});
+// 					}));
+// 				}
+// 			}
+// 		}
+// 		Promise.all(promiseArray).then((allCourses)=>{resolve(combineCourses(termList,allCourses))},reject);
+// 	});
+// }
+
+// function combineCourses(termList, allCourses){//might work might not, haven't been able to test it
+// 	var coursesCount = 0;
+// 	for (var i=0; i<termList.length; i++) {
+// 		for(var j=0; j<termList[i].colleges.length; j++){
+// 			for(var k=0; k<termList[i].colleges[j].subjects.length; k++){
+// 				termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
+// 				coursesCount++;
+// 			}
+// 		}
+// 	}
+// 	console.log(JSON.stringify(termList));
+// 	return termList;
+// }
+
+var fs = require('fs');
+
+
+function saveJSON(termList){
+	var data = JSON.stringify(termList);
+
+	fs.writeFile('temp.txt', data, function(err, data){
+	    if (err) console.log(err);
+	    console.log("Successfully Written to File.");
 	});
-}
 
-function combineCourses(termList, allCourses){//might work might not, haven't been able to test it
-	var coursesCount = 0;
-	for (var i=0; i<termList.length; i++) {
-		for(var j=0; j<termList[i].colleges.length; j++){
-			for(var k=0; k<termList[i].colleges[j].subjects.length; k++){
-				termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
-				coursesCount++;
-			}
-		}
-	}
-	console.log(JSON.stringify(termList));
-	return termList;
 }
 
 
-getTerms.then(getColleges,log).then(getSubjects, log).then(getCourses,log).then(log,log);
+getTerms.then(getColleges,log).then(getSubjects, log).then(saveJSON,log);
 
 
 class Course {
