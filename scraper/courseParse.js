@@ -6,7 +6,7 @@ var HtmlTableToJson = require('html-table-to-json');
 
 var allClasses = [];
 var i =0;
- 
+
 var c = new Crawler({
     rateLimit: 125,
     maxConnections: 1,
@@ -58,7 +58,7 @@ function parseCourse(body){
 				times+=(parsedTable[max][l][m]+ '   ' + parsedTable[max][l][m+1] + '    ');
 			}
 			var a = parsedTable[max][l];
-			
+
 			/* Creates class with class details */
 			var temp = new Course(a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], times);
 			classes.push(temp.toJSON());
@@ -119,7 +119,7 @@ function readJSON(){
 	  	  	}
 	  }
 	console.log(links.length);
-	
+
 	});
 }
 

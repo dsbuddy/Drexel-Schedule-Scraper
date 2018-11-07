@@ -19,7 +19,6 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "html-table-to-json": "^0.4.0",
-    "js-crawler": "^0.3.21",
     "request": "^2.88.0"
   }
 }
