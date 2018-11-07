@@ -1,3 +1,7 @@
+const fs = require('fs')
+
+const overlap = require('./scraper/readJSON').overlap
+
 var classes = [{
   name: "CS270",
   possibletimes: [
@@ -52,12 +56,11 @@ var classes = [{
   }
 ]
 
+classes = JSON.parse(fs.readFileSync("test.json", "utf8"))
+
 function isValidSchedule(sectionToAdd, schedule){
   for (otherClass of schedule){
-    otherClass = otherClass.time
-    latest = Math.max(otherClass.end, sectionToAdd.end)
-    earliest = Math.min(otherClass.start, sectionToAdd.start)
-    if (latest - earliest < (sectionToAdd.end - sectionToAdd.start) + (otherClass.end - otherClass.start)){
+    if(overlap(otherClass.time, sectionToAdd.time)){
       return false
     }
   }
@@ -69,19 +72,19 @@ function findPossibleSchedules(classes, list, schedule) {
     list.push(schedule);
     return true
   }
-  classToAdd = classes[0]
-  foundSchedule = false
-  for (time of classToAdd.possibletimes){
-    if (isValidSchedule(time, schedule)){
+  var className = Object.keys(classes[0][0])[0]
+  var classToAdd = classes[0][0][className]
+  for (section of classToAdd){
+    if (isValidSchedule(section, schedule)){
       newSchedule = schedule.slice()
-      newSchedule.push({"name": classToAdd.name, "time": time})
+      newSchedule.push(section)
       if(findPossibleSchedules(classes.slice(1), list, newSchedule)){
-        foundSchedule = true
       }
     }
   }
 }
 
 var list = []
+
 findPossibleSchedules(classes, list, [])
-console.log(JSON.stringify(list))
+console.log(JSON.stringify(list, null, 4))
