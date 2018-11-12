@@ -1,3 +1,5 @@
+
+/* // Tests
 var class1 = [
 				{'M': '12:00pm - 12:50pm'},
 				{'W': '12:00pm - 12:50pm'},
@@ -18,7 +20,7 @@ var class3 = [
 
 console.log(overlap(class1, class2));
 console.log(overlap(class1, class3));
-console.log(overlap(class2, class3));
+console.log(overlap(class2, class3)); */
 
 function overlap(times1, times2) {
 	var res = false;
