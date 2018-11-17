@@ -127,8 +127,8 @@ $(document).ready(function() {
 		defaultView: 'agendaWeek',
 		allDaySlot: false,
 		columnHeaderFormat: 'ddd',
-		minTime: '7:30',
-		maxTime: '22:30',
+		minTime: '7:00',
+		maxTime: '23:00',
 		events: updateEvents(indx),
 		timezone: 'local',
 		eventRender: function(eventObj, $el) {
