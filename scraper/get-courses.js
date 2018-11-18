@@ -3,15 +3,17 @@ var cheerio = require('cheerio');
 
 var allCourses = [];
 
-var url = 'https://termmasterschedule.drexel.edu/webtms_du/app?component=subjectDetails&page=CollegesSubjects&service=direct&sp=ZH4sIAAAAAAAAAFvzloG1uIhBPjWlVC%2BlKLUiNUcvs6hErzw1qSS3WC8lsSRRLyS1KJcBAhiZGJh9GNgTk0tCMnNTSxhEfLISyxL1iwtz9EECxSWJuQXWPgwcJUAtzvkpQBVCEBU5iXnp%2BsElRZl56TB5l9Ti5EKGOgamioKCEgY2IwNDCyNToJHhmXlAaYXA0sQiEG1ooWtoCQAiXVdwpgAAAA%3D%3D&sp=SCI&sp=SCS&sp=5';
+// var url = 'https://termmasterschedule.drexel.edu/webtms_du/app?component=subjectDetails&page=CollegesSubjects&service=direct&sp=ZH4sIAAAAAAAAAFvzloG1uIhBPjWlVC%2BlKLUiNUcvs6hErzw1qSS3WC8lsSRRLyS1KJcBAhiZGJh9GNgTk0tCMnNTSxhEfLISyxL1iwtz9EECxSWJuQXWPgwcJUAtzvkpQBVCEBU5iXnp%2BsElRZl56TB5l9Ti5EKGOgamioKCEgY2IwNDCyNToJHhmXlAaYXA0sQiEG1ooWtoCQAiXVdwpgAAAA%3D%3D&sp=SCI&sp=SCS&sp=5';
+var url = 'https://termmasterschedule.drexel.edu/webtms_du/app?component=subjectDetails&page=CollegesSubjects&service=direct&sp=ZH4sIAAAAAAAAAFvzloG1uIhBPjWlVC%2BlKLUiNUcvs6hErzw1qSS3WC8lsSRRLyS1KJcBAhiZGJh9GNgTk0tCMnNTSxhEfLISyxL1iwtz9EECxSWJuQXWPgwcJUAtzvkpQBVCEBU5iXnp%2BsElRZl56TB5l9Ti5EKGOgamioKCEgY2IwNDCyNToJHhmXlAaYXA0sQiEG1ooWtoCQAiXVdwpgAAAA%3D%3D&sp=SAS&sp=SHUM&sp=1';
 
 request(url, function (error, response, html) {
   if (!error && response.statusCode == 200) {
 
     var $ = cheerio.load(html);
+    // console.log($);
 
     $('table').attr('bgcolor', '#cccccc').find('.even').each(function(i, element){
-    	var a = $(this).prev().html();
+    	var a = $(this).html();
     	if ((a != null) && (!(String(a).includes('CRN')))) {
     		if(parseCourse(a).Description==undefined) {
     			return;	
@@ -20,7 +22,7 @@ request(url, function (error, response, html) {
     	}
     });
     $('table').attr('bgcolor', '#cccccc').find('.odd').each(function(i, element){
-    	var a = $(this).prev().html();
+    	var a = $(this).html();
     	if ((a != null) && (!(String(a).includes('CRN')))) {
     		if(parseCourse(a).Description==undefined) {
     			return;	
@@ -40,6 +42,7 @@ function parseCourse(course) {
 	var start = 0;
 	var end = 0;
 	for(var i = 0;i < lines.length;i++){
+		if (lines[i].includes('a') && ((extractFromTag(lines[i], 'a') != undefined))) courseJSON['CRN'] = (extractFromTag(lines[i], 'a'));
 		if (lines[i].includes('td') && ((extractFromTag(lines[i], 'td') != undefined) && (temp.length <6))) {
 	    		switch (temp.length){
 	    			case 0:
