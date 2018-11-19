@@ -44,15 +44,14 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `mydb`.`times`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`times` ;
+DROP TABLE IF EXISTS `tms`.`times` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`times` (
+CREATE TABLE IF NOT EXISTS `tms`.`times` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `starttime` DATETIME NOT NULL,
   `endtime` DATETIME NOT NULL,
   `classcrn` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `classcrn_idx` (`classcrn` ASC) VISIBLE,
   CONSTRAINT `classcrn`
     FOREIGN KEY (`classcrn`)
     REFERENCES `mydb`.`classes` (`crn`)
