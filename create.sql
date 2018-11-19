@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `tms`.`classes` (
   `section_comments` VARCHAR(511),
   `building` VARCHAR(63),
   `room` VARCHAR(31),
-  PRIMARY KEY (`CONSTRAINT`))
+  PRIMARY KEY (`crn`))
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
