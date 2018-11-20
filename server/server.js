@@ -7,7 +7,7 @@ if(process.env.CLEARDB_DATABASE_URL === undefined){
 var express = require("express");
 
 var app = express();
-app.use(express.static("."));
+app.use(express.static("server/"));
 app.set('port', (process.env.PORT || 8080));
 
 var bodyParser = require("body-parser");
@@ -38,7 +38,7 @@ app.get("/",(req,res)=>{
 
 function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
-	let file = "../scraper/output.json";
+	let file = __dirname + "../scraper/output.json";
 	let allCourses = JSON.parse(fs.readFileSync(file));
 	if(allCourses === undefined){
 		console.log("pushDataToDatabase Failed to get courses from file: " + file);
