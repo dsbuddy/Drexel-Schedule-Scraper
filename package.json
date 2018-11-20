@@ -2,7 +2,7 @@
   "name": "final-project",
   "version": "1.0.0",
   "description": "Drexel Scheduler",
-  "main": "server/server.js",
+  "main": "node server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "server/server.js"
