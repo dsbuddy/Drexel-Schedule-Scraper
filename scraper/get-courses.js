@@ -1,17 +1,23 @@
+#!/usr/bin/node
+
 var request = require('request');
 var cheerio = require('cheerio');
 
 var allCourses = [];
 
-var url = 'https://termmasterschedule.drexel.edu/webtms_du/app?component=subjectDetails&page=CollegesSubjects&service=direct&sp=ZH4sIAAAAAAAAAFvzloG1uIhBPjWlVC%2BlKLUiNUcvs6hErzw1qSS3WC8lsSRRLyS1KJcBAhiZGJh9GNgTk0tCMnNTSxhEfLISyxL1iwtz9EECxSWJuQXWPgwcJUAtzvkpQBVCEBU5iXnp%2BsElRZl56TB5l9Ti5EKGOgamioKCEgY2IwNDCyNToJHhmXlAaYXA0sQiEG1ooWtoCQAiXVdwpgAAAA%3D%3D&sp=SCI&sp=SCS&sp=5';
+//var url = 'https://termmasterschedule.drexel.edu/webtms_du/app?component=subjectDetails&page=CollegesSubjects&service=direct&sp=ZH4sIAAAAAAAAAFvzloG1uIhBPjWlVC%2BlKLUiNUcvs6hErzw1qSS3WC8lsSRRLyS1KJcBAhiZGJh9GNgTk0tCMnNTSxhEfLISyxL1iwtz9EECxSWJuQXWPgwcJUAtzvkpQBVCEBU5iXnp%2BsElRZl56TB5l9Ti5EKGOgamioKCEgY2IwNDCyNToJHhmXlAaYXA0sQiEG1ooWtoCQAiXVdwpgAAAA%3D%3D&sp=SCI&sp=SCS&sp=5';
+var url = 'https://termmasterschedule.drexel.edu/webtms_du/app?component=subjectDetails&page=CollegesSubjects&service=direct&sp=ZH4sIAAAAAAAAAFvzloG1uIhBPjWlVC%2BlKLUiNUcvs6hErzw1qSS3WC8lsSRRLyS1KJcBAhiZGJh9GNgTk0tCMnNTSxhEfLISyxL1iwtz9EECxSWJuQXWPgwcJUAtzvkpQBVCEBU5iXnp%2BsElRZl56TB5l9Ti5EKGOgamioKCEgY2IwNDCyNToJHhmXlAaYXA0sQiEG1ooWtoCQAiXVdwpgAAAA%3D%3D&sp=SAS&sp=SHUM&sp=1';
 
-request(url, function (error, response, html) {
+request(url, function (error, response, html) {// doesn't EVER get first entry in table
   if (!error && response.statusCode == 200) {
 
     var $ = cheerio.load(html);
 
     $('table').attr('bgcolor', '#cccccc').find('.even').each(function(i, element){
-    	var a = $(this).prev().html();
+    	console.log("i: " + i);
+    	console.log("Element :\n");
+    	jsonPrinter(element);
+    	var a = $(this).html();
     	if ((a != null) && (!(String(a).includes('CRN')))) {
     		if(parseCourse(a).Description==undefined) {
     			return;	
@@ -20,7 +26,7 @@ request(url, function (error, response, html) {
     	}
     });
     $('table').attr('bgcolor', '#cccccc').find('.odd').each(function(i, element){
-    	var a = $(this).prev().html();
+    	var a = $(this).html();
     	if ((a != null) && (!(String(a).includes('CRN')))) {
     		if(parseCourse(a).Description==undefined) {
     			return;	
@@ -28,7 +34,7 @@ request(url, function (error, response, html) {
     		allCourses.push(parseCourse(a));	
     	}
     });
-    console.log(allCourses);
+    console.log(JSON.stringify(allCourses));
   }
 });
 
@@ -74,12 +80,18 @@ function parseCourse(course) {
 	return courseJSON;
 }
 
+
 function extractTime(lines, start, end) {
 	var times = [];
 	for (var i=start; i<=end; i++) {
 		if (lines[i].includes('td')) {
-			var text = extractFromTag(lines[i], 'td');
-			times.push(text);
+			let x = {};
+			let days = extractFromTag(lines[i], 'td');
+			for(let charIndex = 0; charIndex < days.length; charIndex++){
+				x[days.charAt(charIndex)] = extractFromTag(lines[i+1], 'td');
+			}
+			times.push(x);
+			i++;
 		}
 	}
 	return times;
@@ -93,4 +105,15 @@ function extractFromTag(str, tag) {
 	var re = new RegExp(reg,"g");
 	var arr = re.exec(str);
 	if (arr != null) return arr[1];
+}
+
+function jsonPrinter(obj) {
+	console.log("{");
+	for(key in obj){
+		console.log(key);
+		console.log(" : ");
+		console.log(obj[key]);
+		console.log(",");
+	}
+	console.log("}");
 }

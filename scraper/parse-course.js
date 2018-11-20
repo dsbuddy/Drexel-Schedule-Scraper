@@ -1,7 +1,8 @@
-var fs = require('fs');
-var cheerio = require('cheerio');
+#!/usr/bin/node
+var fs = require("fs");
+var cheerio = require("cheerio");
 var Crawler = require("crawler");
-var HtmlTableToJson = require('html-table-to-json');
+var HtmlTableToJson = require("html-table-to-json");
 
 
 var allClasses = [];

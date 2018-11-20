@@ -1,31 +1,32 @@
 #!/usr/bin/node
 
-var request = require('request');
-var cheerio = require('cheerio');
+let request = require('request');
+let cheerio = require('cheerio');
 const HtmlTableToJson = require('html-table-to-json');
 
 
 const getTerms = new Promise((resolve, reject)=>{
-	var termList = [];
+	console.log("Starting getTerms()");
+	let termList = [];
 	request("https://termmasterschedule.drexel.edu", function(error, response, body) {
 		if(error) {
-			console.log("Error: " + error);
+			console.log(error);
 			reject();
+			return
 		}
-		console.log("Status code: " + response.statusCode);
-		var $ = cheerio.load(body);
+		let $ = cheerio.load(body);
 
 		/* Term List */
 		$('.term').each(function (i, elem){
-			var name = $(this).text().trim();
+			let name = $(this).text().trim();
 			if(name.includes("Semester")){
 				return;
 			}
 			termList[i] = {"name" : name , "link":"https://termmasterschedule.drexel.edu"+$(elem).find('a').attr('href')};
 			return;
 		});
-		console.log("Success of getting links");
-		resolve(termList);
+		console.log("Success in getTerms()");
+		resolve(termList.slice(2,3));//0,4));//first 4 as they are the ones we care about ie current year
 	});
 });
 
@@ -37,20 +38,20 @@ function log(msg){
 
 const getColleges = (list) => {
 	return new Promise((resolve, reject)=>{
-		var termList = list;
-		var promiseArray = [];
-		for (var i=0; i<termList.length; i++) {
+		console.log("Starting getColleges()");
+		let termList = list;
+		let promiseArray = [];
+		for (let i=0; i<termList.length; i++) {
 			promiseArray.push(new Promise((resolve,reject) =>{
 				request(termList[i].link, function(error, response, body) {
 					if(error) {
-						console.log("Error: " + error);
+						console.log(error);
 						reject("Broke in getColleges");
 						return;
 					}
-					console.log("Status code: " + response.statusCode);
-					var $ = cheerio.load(body);
+					let $ = cheerio.load(body);
 					/* Term List */
-					var colleges = [];
+					let colleges = [];
 					$('#sideLeft a').each(function (i, elem){
 						colleges.push({"name" : $(elem).text() , "link": "https://termmasterschedule.drexel.edu"+$(elem).attr('href')});
 
@@ -65,30 +66,31 @@ const getColleges = (list) => {
 
 
 function combineColleges(termList, colleges){
-	for( var i=0; i<termList.length; i++){
+	for( let i=0; i<termList.length; i++){
 		termList[i].colleges=colleges[i];
 	}
+	console.log("Succes in getColleges");
 	return termList;
 }
 
 
 const getSubjects = (list)=>{
-	var termList = list;
+	let termList = list;
 	return new Promise((resolve, reject)=>{
-		var promiseArray = [];
-		for (var i=0; i<termList.length; i++) {
-			for(var j=0; j< termList[i].colleges.length; j++){
+		console.log("Starting getSubjects");
+		let promiseArray = [];
+		for (let i=0; i<termList.length; i++) {
+			for(let j=0; j< termList[i].colleges.length; j++){
 				promiseArray.push(new Promise((resolve,reject) =>{
 					request(termList[i].colleges[j].link, function(error, response, body) {
 						if(error) {
-							console.log("Error: " + error);
+							console.log(error);
 							reject("Broke in get Subjects");
 							return;
 						}
-						console.log("Status code: " + response.statusCode);
 
-						var subjects = [];
-						var $ = cheerio.load(body);
+						let subjects = [];
+						let $ = cheerio.load(body);
 
 
 						/* Save subject names and links */
@@ -108,100 +110,158 @@ const getSubjects = (list)=>{
 }
 
 function combineSubjects(termList, subjects) {
-	var subjectCount = 0;
-	for( var i=0; i<termList.length; i++){
-		for(var j=0; j< termList[i].colleges.length; j++){
+	let subjectCount = 0;
+	for( let i=0; i<termList.length; i++){
+		for(let j=0; j< termList[i].colleges.length; j++){
 			termList[i].colleges[j].subjects = subjects[subjectCount];
 			subjectCount++;
 		}
 	}
+	console.log("Succes in getSubjects");
 	return termList;
 }
 
+async function getCourses(termList){
+	console.log("Starting getCourses");
+	let allCourses = [];
+	for (let i=0; i<termList.length; i++) {
+		for(let j=0; j<termList[i].colleges.length; j++){
+			for(let k=0; k<termList[i].colleges[j].subjects.length; k++){
+				let link = termList[i].colleges[j].subjects[k].link;
+				console.log("Getting courses from Link:\n" + link);
+				let temp = await getCourseFromLink(link);
+				allCourses.push(temp);
+			}
+		}
+	}
+	console.log("Resolving all courses");
+	return combineCourses(termList,allCourses);
+}
 
-// const getCourses = (termList) => {
-// 	return new Promise((resolve, reject)=>{
-// 		var promiseArray = [];
-// 		for (var i=0; i<termList.length; i++) {
-// 			for(var j=0; j<termList[i].colleges.length; j++){
-// 				for(var k=0; k<termList[i].colleges[j].subjects.length; k++){
-// 					promiseArray.push(new Promise((resolve,reject) =>{
-// 						request(termList[i].colleges[j].subjects[k].link, function(error, response, body) {//fix in here
-// 										//looks like the links are right but  idk how the rest works
-// 							if(error) {
-// 								console.log("Error: " + error);
-// 								reject("Failed in getCourses");
-// 							}
-// 							var $ ="";
-// 							try{
-// 								$ = cheerio.load(body); //THIS SOMETIMES TIMES OUT SO BECAREFUL
-// 							} catch(error){
-// 								$ = "";
-// 							}
 
-// 							/* Converts table of courses JSON */
-// 							var tableHTML = $('table').attr('bgcolor', '#cccccc').html();
-// 							const html = String(tableHTML);
-// 							const jsonTables = new HtmlTableToJson(html);
-// 							var parsedTable = jsonTables['results'];
-// 							var classes = [];
-// 							/* Finds correct JSON array */
-// 							var max = 0;
-// 							for (var i=0; i<parsedTable.length; i++){
-// 								if (parsedTable[i].length > parsedTable[max].length){
-// 									max = i;
-// 								}
-// 							}
+function getCourseFromLink(link){
+	return new Promise((resolve,reject) =>{
+		request(link, function (error, response, html) {
+			if (!error && response.statusCode == 200) {
+				var $ = cheerio.load(html);
+				let allCourses = [];
+				$('table').attr('bgcolor', '#cccccc').find('.even').each(function(i, element){
+					var a = $(this).prev().html();
+					if ((a != null) && (!(String(a).includes('CRN')))) {
+						if(parseCourse(a).Description==undefined) {
+							return;	
+						}
+						allCourses.push(parseCourse(a));	
+					}
+				});
+				$('table').attr('bgcolor', '#cccccc').find('.odd').each(function(i, element){
+					var a = $(this).prev().html();
+					if ((a != null) && (!(String(a).includes('CRN')))) {
+						if(parseCourse(a).Description==undefined) {
+							return;	
+						}
+						allCourses.push(parseCourse(a));	
+					}
+				});
+				console.log("\n------------------------------------------------\n" + JSON.stringify(allCourses) + "\n------------------------------------------------\n");
+				resolve(allCourses);
+			}else{
+				console.log(error);
+				resolve([error]);
+			}
+		});
+	})
+}
 
-// 							/* Removes extraneous elements */
-// 							for (var l=0; parsedTable[max] != undefined && l<parsedTable[max].length; l++){ // added the undefined comparison as it kept throwing errorrs(I think the table is empty sometimes)
-// 								if (Object.keys(parsedTable[max][l]).length > 10 && Object.keys(parsedTable[max][l]).length < 14){
-// 									parsedTable[max][l] = swap(parsedTable[max][l], String(Object.keys(parsedTable[max][l]).length), "8")
-// 									delete parsedTable[max][l][Object.keys(parsedTable[max][l]).length];
-// 									var times = '';
+function parseCourse(course) {
+	var temp = []
+	var courseJSON = {};
+	var lines = course.split('\n');
+	var start = 0;
+	var end = 0;
+	for(var i = 0;i < lines.length;i++){
+		if (lines[i].includes('td') && ((extractFromTag(lines[i], 'td') != undefined) && (temp.length <6))) {
+	    		switch (temp.length){
+	    			case 0:
+	    				courseJSON['Subject'] = (extractFromTag(lines[i], 'td'));
+	    				break;
+    				case 1:
+	    				courseJSON['Number'] = (extractFromTag(lines[i], 'td'));
+	    				break;
+    				case 2:
+	    				courseJSON['Type'] = (extractFromTag(lines[i], 'td'));
+	    				break;
+    				case 3:
+	    				courseJSON['Method'] = (extractFromTag(lines[i], 'td'));
+	    				break;
+    				case 4:
+	    				courseJSON['Section'] = (extractFromTag(lines[i], 'td'));
+	    				break;
+    				case 5:
+	    				courseJSON['Description'] = (extractFromTag(lines[i], 'td'));
+	    				break;
+	    		}
+	    	temp.push(extractFromTag(lines[i], 'td'));
+		}
+		if (start == 0 && lines[i].includes('<tr')) {
+			start = i;
+		}
+		if (lines[i].includes('<\/tr')) {
+			end = i;
+		}
+	}
+	courseJSON['Times'] = extractTime(lines, start, end);
+	return courseJSON;
+}
 
-// 									/* Formats day and time */
-// 									for (var m=9; m<Object.keys(parsedTable[max][i]).length; m+=2){
-// 										times+=(parsedTable[max][l][m]+ '   ' + parsedTable[max][l][m+1] + '    ');
-// 									}
-// 									var a = parsedTable[max][l];
+function extractTime(lines, start, end) {
+	var times = [];
+	for (var i=start; i<=end; i++) {
+		if (lines[i].includes('td')) {
+			let x = {};
+			let days = extractFromTag(lines[i], 'td');//days of week MTWRF
+			for(let charIndex = 0; charIndex < days.length; charIndex++){
+				x[days.charAt(charIndex)] = extractFromTag(lines[i+1], 'td');
+			}
+			times.push(x);
+			i++;
+		}
+	}
+	return times;
+}
 
-// 									/* Creates class with class details */
-// 									var temp = new Course(a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], times);
-// 									classes.push(temp.toJSON());
-// 								}
-// 							}
-// 							resolve(classes);
-// 						});
-// 					}));
-// 				}
-// 			}
-// 		}
-// 		Promise.all(promiseArray).then((allCourses)=>{resolve(combineCourses(termList,allCourses))},reject);
-// 	});
-// }
 
-// function combineCourses(termList, allCourses){//might work might not, haven't been able to test it
-// 	var coursesCount = 0;
-// 	for (var i=0; i<termList.length; i++) {
-// 		for(var j=0; j<termList[i].colleges.length; j++){
-// 			for(var k=0; k<termList[i].colleges[j].subjects.length; k++){
-// 				termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
-// 				coursesCount++;
-// 			}
-// 		}
-// 	}
-// 	console.log(JSON.stringify(termList));
-// 	return termList;
-// }
 
-var fs = require('fs');
+
+function extractFromTag(str, tag) {
+	var reg = '<'+tag+'.*>([^<]+)<\/'+tag+'>';
+	var re = new RegExp(reg,"g");
+	var arr = re.exec(str);
+	if (arr != null) return arr[1];
+}
+
+function combineCourses(termList, allCourses){//might work might not, haven't been able to test it
+	console.log("Entered combineCourses()");
+	let coursesCount = 0;
+	for (let i=0; i<termList.length; i++) {
+		for(let j=0; j<termList[i].colleges.length; j++){
+			for(let k=0; k<termList[i].colleges[j].subjects.length; k++){
+				termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
+				coursesCount++;
+			}
+		}
+	}
+	console.log("Success in getCourses");
+	return termList;
+}
+
+let fs = require('fs');
 
 
 function saveJSON(termList){
-	var data = JSON.stringify(termList);
+	let data = JSON.stringify(termList);
 
-	fs.writeFile('temp.txt', data, function(err, data){
+	fs.writeFile('testing123.txt', data, function(err, data){
 	    if (err) console.log(err);
 	    console.log("Successfully Written to File.");
 	});
@@ -209,7 +269,7 @@ function saveJSON(termList){
 }
 
 
-getTerms.then(getColleges,log).then(getSubjects, log).then(saveJSON,log);
+getTerms.then(getColleges,log).then(getSubjects, log).then(getCourses,log).then(saveJSON, log);
 
 
 class Course {
@@ -241,7 +301,7 @@ class Course {
 }
 
 function swap(obj,index1,index2){
-    var temp = obj[index1];
+    let temp = obj[index1];
     obj[index1] = obj[index2];
     obj[index2] = temp;
     return obj;
