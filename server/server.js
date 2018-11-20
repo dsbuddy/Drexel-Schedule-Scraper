@@ -29,7 +29,7 @@ app.get("/",(req,res)=>{
 	pushDataToDatabase();
 	res.write("WOW");
 	res.send();
-}
+});
 
 function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
