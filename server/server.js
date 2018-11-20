@@ -27,7 +27,6 @@ con.connect((err)=>  {
 		process.exit();
 	}
 	console.log("Database successfully connected");  
-	pushDataToDatabase();
 });
 
 
@@ -35,7 +34,7 @@ con.connect((err)=>  {
 
 function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
-	let file = "../scraper/testing123.txt";
+	let file = "../scraper/output.json";
 	let allCourses = JSON.parse(fs.readFileSync(file));
 	if(allCourses === undefined){
 		console.log("pushDataToDatabase Failed to get courses from file: " + file);
