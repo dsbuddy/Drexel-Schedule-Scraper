@@ -13,13 +13,8 @@ var fs = require("fs");
 
 //sql details
 var mysql = require("mysql");
-var con = mysql.createConnection({
-	host:  "localhost",
-	user:  "root",
-	password: "root",
-	database: "ScheduleBoy",
-	port: 3306,
-});
+
+var con = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
 
 con.connect((err)=>  {
 	if (err)  {
@@ -30,7 +25,9 @@ con.connect((err)=>  {
 });
 
 
-
+app.get("/",(req,res)=>{
+	pushDataToDatabase();
+}
 
 function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
