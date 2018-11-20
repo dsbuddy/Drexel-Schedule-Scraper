@@ -38,7 +38,7 @@ app.get("/",(req,res)=>{
 
 function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
-	let file = __dirname + "../scraper/output.json";
+	let file = __dirname + "/../scraper/output.json";
 	let allCourses = JSON.parse(fs.readFileSync(file));
 	if(allCourses === undefined){
 		console.log("pushDataToDatabase Failed to get courses from file: " + file);
