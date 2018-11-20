@@ -19,6 +19,7 @@
   "homepage": "https://github.com/dp834/Drexel-Schedule-Helper#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
+    "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
     "fullcalendar": "^3.9.0",

@@ -1,9 +1,14 @@
 #! /usr/bin/node
 
+if(process.env.CLEARDB_DATABASE_URL === undefined){
+	require('dotenv').config();
+}
+
 var express = require("express");
 
 var app = express();
 app.use(express.static("."));
+app.set('port', (process.env.PORT || 8080));
 
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended:false}));
@@ -78,4 +83,4 @@ function pushDataToDatabase(){
 }
 
 //starts the listener
-app.listen(8080);
+app.listen(app.get('port'));
