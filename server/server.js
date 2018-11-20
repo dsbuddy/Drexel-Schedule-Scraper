@@ -27,6 +27,8 @@ con.connect((err)=>  {
 
 app.get("/",(req,res)=>{
 	pushDataToDatabase();
+	res.write("WOW");
+	res.send();
 }
 
 function pushDataToDatabase(){
