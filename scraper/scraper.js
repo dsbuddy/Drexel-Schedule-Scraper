@@ -2,8 +2,6 @@
 
 let request = require('request');
 let cheerio = require('cheerio');
-const HtmlTableToJson = require('html-table-to-json');
-
 
 const getTerms = new Promise((resolve, reject)=>{
 	console.log("Starting getTerms()");
@@ -235,8 +233,8 @@ let fs = require('fs');
 
 function saveJSON(termList){
 	let data = JSON.stringify(termList);
-
-	fs.writeFile('testing123.txt', data, function(err, data){
+	//should be called from server which has it's home dir in /server/
+	fs.writeFile('/../scraper/courses.json', data, function(err, data){
 	    if (err) console.log(err);
 	    console.log("Successfully Written to File.");
 	});

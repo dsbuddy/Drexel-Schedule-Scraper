@@ -38,19 +38,21 @@ app.get("/",(req,res)=>{
 
 function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
-	let file = __dirname + "/../scraper/output.json";
+	let file = __dirname + "/../scraper/courses.json";
 	let allCourses = JSON.parse(fs.readFileSync(file));
 	if(allCourses === undefined){
 		console.log("pushDataToDatabase Failed to get courses from file: " + file);
 		return;
 	}
+	let totalRequests = 0;
+	let actualRequests = 0;
 	console.log("File read");
 	for(term in allCourses){
 		for(college in allCourses[term].colleges){
+			let query = "INSERT INTO courses (term, college, subject, number, type, method, section, crn, description, times, instructor) VALUES (";
 			for(subject in allCourses[term].colleges[college].subjects){
 				for(course in allCourses[term].colleges[college].subjects[subject].courses){
 					let item = allCourses[term].colleges[college].subjects[subject].courses[course];
-					let query = "INSERT INTO courses (term, college, subject, number, type, method, section, crn, description, times, instructor) VALUES (";
 					query += con.escape(allCourses[term].name);
 					query += ", " + con.escape(allCourses[term].colleges[college].name);
 					query += ", " + con.escape(item.Subject);
@@ -62,25 +64,24 @@ function pushDataToDatabase(){
 					query += ", " + con.escape(item.Description);
 					query += ", " + con.escape(JSON.stringify(item.Times));
 					query += ", " + con.escape(item.Instructor);
-					query += ");";
-					
-					if(con.escape(item.Section).length >15){
-						console.log(query);
-					}
-
-					con.query(query,
-					(err,rows,field)=>{
-							if(err && !String(err).includes("ER_DUP_ENTRY")){
-								console.log("Error with query\n" + err);
-							}
-						}
-					);
+					query += "),\n(";
+					totalRequests++;
 				}
 			}
+			query = query.slice(0,-3) + ";";	
+			actualRequests++;		
+			con.query(query,
+			(err,rows,field)=>{
+				if(err && !String(err).includes("ER_DUP_ENTRY")){
+					console.log("Error with query\n" + err);
+				}
+			});
 		}
 	}
-	console.log("DONE");
+	console.log("totalRequests: " + totalRequests);
+	console.log("actualRequests: " + actualRequests);
 }
 
 //starts the listener
 app.listen(app.get('port'));
+console.log("Listening on port:" + app.get('port'));
