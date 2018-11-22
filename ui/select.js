@@ -1,5 +1,6 @@
 var classes = [];
 var restrictions = [];
+days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "each day"];
 
 $(document).ready(() => {
   createRestrictionInput();
@@ -102,8 +103,6 @@ function createRestrictionInput(){
     $('#restriction-input').append(timeInput);
   }
 
-  days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-
   if(type != 'on'){
     var daySelectHeader = document.createElement('h4');
     daySelectHeader.innerHTML = 'on'
@@ -120,4 +119,57 @@ function createRestrictionInput(){
   }
   $('#restriction-input').append(daySelect);
 
+}
+
+function convertTimeWithoutAMPM(time){
+  times = time.split(":");
+  return parseInt(times[0]) * 60 + parseInt(times[1]);
+}
+
+function findSchedules(){
+  parsedRestrictions = [];
+  for(var restriction of restrictions){
+    var start = "";
+    var end  = "";
+    var keys = restriction.split(' ');
+    var type = keys[0];
+    if(type == "on"){
+      start = 0;
+      end = 23 * 60 + 59;
+    }
+    else if(type == "before"){
+      start = 0;
+      end = convertTimeWithoutAMPM(keys[1]);
+    }
+    else if(type == "after"){
+      start = convertTimeWithoutAMPM(keys[1]);
+      end = 23 * 60 + 59;
+    }
+    else{
+      start = convertTimeWithoutAMPM(keys[1]);
+      end = convertTimeWithoutAMPM(keys[3]);
+    }
+    if(keys[keys.length-1] == "day"){
+      for(var offset = 0; offset < 5; offset++){
+        dayOffset = offset * 24 * 60;
+        parsedRestrictions.push({"startTime" : start + dayOffset, "endTime" : end + dayOffset});
+      }
+    }
+    else{
+      dayOffset = days.indexOf(keys[keys.length-1]) * 24 * 60;
+      start += dayOffset;
+      end += dayOffset;
+      parsedRestrictions.push({"startTime" : start, "endTime" : end});
+    }
+  }
+  /*$.ajax({
+    type: 'GET',
+    url: 'classes',
+    data: classes,
+    success: (result) => {
+      findAllSchedules(result, parsedRestrictions);
+    }
+  })*/
+  console.log(parsedRestrictions);
+  findAllSchedules(classes, parsedRestrictions)
 }

@@ -36,8 +36,8 @@ var list = []
 findPossibleSchedules(classes, list, [])
 // console.log(JSON.stringify(list, null, 4))
 
-var data = JSON.stringify(list);  
-fs.writeFileSync('demo1-example-schedules.json', data); 
+var data = JSON.stringify(list);
+fs.writeFileSync('demo1-example-schedules.json', data);
 
 
 /* var classes = [{
