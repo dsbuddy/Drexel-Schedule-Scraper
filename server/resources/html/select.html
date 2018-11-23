@@ -29,52 +29,56 @@
           		</div>
 
           		<div id="content">
-				<h3>Select Courses</h3>
-				<br><br>
-				<div class="row">
-					<div class="col-md-5">
-						<h4>I want to take</h4>
-						<div class="input-group">
-							<input type="text" class="form-control" id="class-name"></input>
-							<button class="btn btn-success" onclick="addClass()">and</button>
+          			<div class="container-fluid">
+          				<div id="termInput">
+							<div class="row">
+								<div class="col-md-12">
+									<h4>Select Term</h4>
+									<div class="input-group">
+										<input type="text" class="form-control" id="term-name"></input>
+										<button class="btn btn-success" onclick="selectTerm()">Submit</button>
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div class="col-md-5">
-						<h4>but I don't want classes</h4>
-						<div class="input-group">
-							<select class="form-control" id="restriction-type" onchange="createRestrictionInput()">
-								<option selected>on</option>
-								<option>before</option>
-								<option>after</option>
-								<option>between</option>
-							</select>
-							<div id="restriction-input"></div>
-							<button class="btn btn-success"  onclick="addRestriction()">or</button>
-						</div>
-					</div>
-					<div class="col-md-2">
-						<h4>during</h4>
-						<div class="input-group">
-							<input type="text" class="form-control" id="term-name"></input>
+						<div id="classInput">
+							<h3>Select Courses</h3>
+							<div class="row">
+								<div class="col-md-6">
+									<h4>I want to take</h4>
+									<div class="input-group">
+										<input type="text" class="form-control" id="class-name"></input>
+										<button class="btn btn-success" onclick="addClass()">and</button>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<h4>but I don't want classes</h4>
+									<div class="input-group">
+										<select class="form-control" id="restriction-type" onchange="createRestrictionInput()">
+											<option selected>on</option>
+											<option>before</option>
+											<option>after</option>
+											<option>between</option>
+										</select>
+										<div id="restriction-input"></div>
+										<button class="btn btn-success"  onclick="addRestriction()">or</button>
+									</div>
+								</div>
+							</div>
+							<div class="row mt-3">
+								<div class="col-md-6" id="class-table"></div>
+								<div class="col-md-6" id="restriction-table"></div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 text-center">
+									<button class="btn btn-large btn-primary" onclick="findSchedules()">Find schedules</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row mt-3">
-					<div class="col-md-4" id="class-table"></div>
-					<div class="col-md-4" id="restriction-table"></div>
-					<div class="col-md-4"></div>
-				</div>
-				<div class="row">
-					<div class="col-md-12 text-center">
-				<button class="btn btn-large btn-primary" onclick="findSchedules()">Find schedules</button>
 			</div>
 		</div>
-	</div>
-
-</div>
-
-      </div>
-
     </div>
 
 

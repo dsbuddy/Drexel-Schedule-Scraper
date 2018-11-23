@@ -2,6 +2,10 @@
  * Globals
  */
 
+#classInput {
+  display: none;
+}
+
 /* Links */
 a,
 a:focus,

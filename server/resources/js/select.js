@@ -36,9 +36,14 @@ function addClass(){
   updateClassTable();
 }
 
-function addTerm(){
-  term = $('#term-name').val();
-  $('#term-name').val('');
+function selectTerm(){
+  var termAttr = $('#term-name');
+  if (termAttr.val() != "") {
+    term = termAttr.val();
+    termAttr.val('');
+    $('#termInput').hide();
+    $('#classInput').show();
+  }
 }
 
 function addRestriction(){
