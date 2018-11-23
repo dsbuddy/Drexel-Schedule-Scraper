@@ -1,5 +1,6 @@
 var allSchedules = [];
 var classes = [];
+var term;
 var restrictions = [];
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "each day"];
 
@@ -34,6 +35,16 @@ function addClass(){
   addList(classes, $('#class-name').val());
   $('#class-name').val('');
   updateClassTable();
+}
+
+function selectTerm(){
+  var termAttr = $('#term-name');
+  if (termAttr.val() != "") {
+    term = termAttr.val();
+    termAttr.val('');
+    $('#termInput').hide();
+    $('#classInput').show();
+  }
 }
 
 function addRestriction(){
