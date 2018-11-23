@@ -19,25 +19,45 @@ var fs = require("fs");
 //sql details
 var mysql = require("mysql");
 
-var con = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
+let con = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
+let sqlDisconnected = true;
 
-con.connect((err)=>  {
-	if (err)  {
-		console.log("Error connecting to database\n" + err); 
-		process.exit();
+const connectToDatabase = new Promise((resolve, reject)=>{//not running through for some reason
+	debugger;
+	if(sqlDisconnected){
+		con.destroy();
 	}
-	console.log("Database successfully connected");  
+	con = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
+	con.on('error', (err)=>{
+		console.log("" + err);
+		if(err == "Error: Connection lost: The server closed the connection."){
+			sqlDisconnected = true;
+		}
+	});
+	con.connect((err)=>{
+		if(err){
+			reject("Error connecting to database, aborting pushDataToDatabase\n" + err);
+			return;
+		}
+		sqlDisconnected = false;
+		resolve("Reconnected to database");
+	});
 });
 
 
 app.get("/",(req,res)=>{
-	pushDataToDatabase();
-	res.write("WOW");
+	res.write(fs.readFileSync(__dirname + "/resources/html/select.html"));
 	res.send();
 });
 
-function pushDataToDatabase(){
+async function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
+	if(sqlDisconnected){
+		if (!(await connectToDatabase.then((msg)=>{console.log(con); return true;}, (msg)=>{console.log(msg); return false;}))){
+			return;
+		}
+	}
+	console.log("pushDataToDatabase with DB connection");
 	let file = __dirname + "/../scraper/courses.json";
 	let allCourses = JSON.parse(fs.readFileSync(file));
 	if(allCourses === undefined){
@@ -70,8 +90,7 @@ function pushDataToDatabase(){
 			}
 			query = query.slice(0,-3) + ";";	
 			actualRequests++;		
-			con.query(query,
-			(err,rows,field)=>{
+			con.query(query, (err,rows,field)=>{
 				if(err && !String(err).includes("ER_DUP_ENTRY")){
 					console.log("Error with query\n" + err);
 				}
@@ -82,6 +101,13 @@ function pushDataToDatabase(){
 	console.log("actualRequests: " + actualRequests);
 }
 
-//starts the listener
-app.listen(app.get('port'));
-console.log("Listening on port:" + app.get('port'));
+
+async function initialConnect(){
+	await connectToDatabase.then(console.log);
+	if(!sqlDisconnected){
+	//starts the listener
+		app.listen(app.get('port'));
+		console.log("Listening on port:" + app.get('port'));
+	}
+}
+initialConnect();

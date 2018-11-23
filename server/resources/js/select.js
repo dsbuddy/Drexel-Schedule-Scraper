@@ -162,14 +162,14 @@ function findSchedules(){
       parsedRestrictions.push({"startTime" : start, "endTime" : end});
     }
   }
-  /*$.ajax({
+  $.ajax({
     type: 'GET',
     url: 'classes',
     data: classes,
     success: (result) => {
       findAllSchedules(result, parsedRestrictions);
     }
-  })*/
-  console.log(parsedRestrictions);
-  findAllSchedules(classes, parsedRestrictions)
+  })
+  // console.log(parsedRestrictions);
+  //findAllSchedules(classes, parsedRestrictions)
 }
