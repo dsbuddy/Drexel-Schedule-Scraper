@@ -50,6 +50,44 @@ app.get("/",(req,res)=>{
 	res.send();
 });
 
+
+app.post("/classes", (req, res)=>{
+	console.log("Entered classes with:\n" + JSON.stringify(req.body));
+	let query = "select * from courses where term=" + con.escape(req.body.term) + "AND (";
+	let coursesRes = [];
+	let map = {};
+	let counter = 0;
+	for(course in req.body.courses){
+		map[req.body.courses[course]] = counter;
+		coursesRes[counter] = [];
+		counter++;
+		let split = req.body.courses[course].split(" ");
+		query+= "(subject=" + con.escape(split[0]) + " AND number=" + con.escape(split[1]) +") OR";
+	}
+	query = query.slice(0,-2);
+	query += ");"
+
+	con.query(query, (err,rows,field)=>{
+		if(err){
+			res.status("200");
+			res.write("Error with query");
+			res.send();
+			return;
+		}
+		for(row in rows){
+			console.log(rows[row].subject + " " + rows[row].number);
+			var pointer = map[rows[row].subject + " " + rows[row].number];
+			if(pointer !== undefined){
+				coursesRes[pointer].push(rows[row]);
+			}
+		}
+		console.log(JSON.stringify(coursesRes));
+		res.write(JSON.stringify(coursesRes));
+		res.end();	
+	})
+});
+
+
 async function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
 	if(sqlDisconnected){
