@@ -46,7 +46,7 @@ const connectToDatabase = new Promise((resolve, reject)=>{//not running through 
 
 
 app.get("/",(req,res)=>{
-	res.write(fs.readFileSync(__dirname + "/resources/html/select.html"));
+	res.write(fs.readFileSync(__dirname + "/resources/html/index.html"));
 	res.send();
 });
 
@@ -87,6 +87,29 @@ app.post("/classes", (req, res)=>{
 	})
 });
 
+app.get("/allTerms", (req,res)=>{
+	query = "SELECT DISTINCT term FROM courses;";
+	con.query(query, (err,rows, field)=>{
+		if(err){
+			res.status(200);
+			res.write("Error with query");
+			res.end();
+			return;
+		}
+		res.json(rows);
+		res.end();
+	});
+});
+
+app.get("/allClasses", (req,res)=>{
+	if(req.query.term == undefined){
+		res.status(200);
+		res.write("Error with query");
+		res.end();
+		return;	
+	}
+	query = 'SELECT DISTINCT CONCAT(subject, " ", number) as ID from courses where term=' + con.escape(req.query.term) + ' ORDER BY ID';
+});
 
 async function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");

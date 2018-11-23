@@ -90,7 +90,6 @@ function getRestriction(){
 
 function createRestrictionInput(){
   var type = $("#restriction-type").val();
-  console.log(type);
   $('#restriction-input').empty()
   if(type == 'before' || type == 'after'){
     var timeInput = document.createElement('input')
