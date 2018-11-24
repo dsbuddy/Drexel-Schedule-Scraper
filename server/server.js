@@ -16,44 +16,67 @@ app.use(bodyParser.json());
 
 var fs = require("fs");
 
-//sql details
+
 var mysql = require("mysql");
 
-let con = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
-let sqlDisconnected = true;
+let pool = mysql.createPool(process.env.CLEARDB_DATABASE_URL);
 
-const connectToDatabase = new Promise((resolve, reject)=>{//not running through for some reason
-	debugger;
-	if(sqlDisconnected){
-		con.destroy();
-	}
-	con = mysql.createConnection(process.env.CLEARDB_DATABASE_URL);
-	con.on('error', (err)=>{
-		console.log("" + err);
-		if(err == "Error: Connection lost: The server closed the connection."){
-			sqlDisconnected = true;
-		}
-	});
-	con.connect((err)=>{
-		if(err){
-			reject("Error connecting to database, aborting pushDataToDatabase\n" + err);
-			return;
-		}
-		sqlDisconnected = false;
-		resolve("Reconnected to database");
-	});
+pool.on('acquire', function (connection) {
+  console.log('Connection %d acquired', connection.threadId);
 });
 
+pool.on('enqueue', function () {
+  console.log('Waiting for available connection slot');
+});
+
+pool.on('release', function (connection) {
+  console.log('Connection %d released', connection.threadId);
+});
 
 app.get("/",(req,res)=>{
 	res.write(fs.readFileSync(__dirname + "/resources/html/index.html"));
 	res.send();
 });
 
+app.get("/index", (req,res)=>{
+	res.write(fs.readFileSync(__dirname + "/resources/html/index.html"));
+	res.send();
+});
+
+
+app.get("/select", (req,res)=>{
+	res.write(fs.readFileSync(__dirname + "/resources/html/select.html"));
+	res.send();
+});
+
+app.post("/render", (req,res)=>{
+	console.log("Entered render with: " + JSON.stringify(req.body));
+	if(req.body.page === undefined){
+		res.status(200);
+		res.write("Could not find page");
+		res.send();
+		return;
+	}
+	switch(req.body.page){
+		case("index"):
+			res.write(fs.readFileSync(__dirname + "/resources/html/index.html"));
+			break;
+		case("select"):
+			res.write(fs.readFileSync(__dirname + "/resources/html/select.html"));
+			break;
+		case("calendar"):
+			res.write(fs.readFileSync(__dirname + "/resources/html/calendar.html"));
+			break;
+		default:
+			res.status(200);
+			res.write("Could not find page");
+	}
+	res.send();
+});
 
 app.post("/classes", (req, res)=>{
 	console.log("Entered classes with:\n" + JSON.stringify(req.body));
-	let query = "select * from courses where term=" + con.escape(req.body.term) + "AND (";
+	let query = "select * from courses where term=" + pool.escape(req.body.term) + "AND (";
 	let coursesRes = [];
 	let map = {};
 	let counter = 0;
@@ -62,12 +85,12 @@ app.post("/classes", (req, res)=>{
 		coursesRes[counter] = [];
 		counter++;
 		let split = req.body.courses[course].split(" ");
-		query+= "(subject=" + con.escape(split[0]) + " AND number=" + con.escape(split[1]) +") OR";
+		query+= "(subject=" + pool.escape(split[0]) + " AND number=" + pool.escape(split[1]) +") OR";
 	}
 	query = query.slice(0,-2);
 	query += ");"
 
-	con.query(query, (err,rows,field)=>{
+	pool.query(query, (err,rows,field)=>{
 		if(err){
 			res.status("200");
 			res.write("Error with query");
@@ -75,13 +98,11 @@ app.post("/classes", (req, res)=>{
 			return;
 		}
 		for(row in rows){
-			console.log(rows[row].subject + " " + rows[row].number);
 			var pointer = map[rows[row].subject + " " + rows[row].number];
 			if(pointer !== undefined){
 				coursesRes[pointer].push(rows[row]);
 			}
 		}
-		console.log(JSON.stringify(coursesRes));
 		res.write(JSON.stringify(coursesRes));
 		res.end();	
 	})
@@ -89,7 +110,7 @@ app.post("/classes", (req, res)=>{
 
 app.get("/allTerms", (req,res)=>{
 	query = "SELECT DISTINCT term FROM courses;";
-	con.query(query, (err,rows, field)=>{
+	pool.query(query, (err,rows, field)=>{
 		if(err){
 			res.status(200);
 			res.write("Error with query");
@@ -108,17 +129,21 @@ app.get("/allClasses", (req,res)=>{
 		res.end();
 		return;	
 	}
-	query = 'SELECT DISTINCT CONCAT(subject, " ", number) as ID from courses where term=' + con.escape(req.query.term) + ' ORDER BY ID';
+	query = 'SELECT DISTINCT CONCAT(subject, " ", number) as ID from courses where term=' + pool.escape(req.query.term) + ' ORDER BY ID';
+	pool.query(query,(err,rows,fields)=>{
+		if(err){
+			res.status(200);
+			res.write("Error with query");
+			res.end();
+			return;
+		}
+		res.json(rows);
+		res.send();
+	});
 });
 
 async function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
-	if(sqlDisconnected){
-		if (!(await connectToDatabase.then((msg)=>{console.log(con); return true;}, (msg)=>{console.log(msg); return false;}))){
-			return;
-		}
-	}
-	console.log("pushDataToDatabase with DB connection");
 	let file = __dirname + "/../scraper/courses.json";
 	let allCourses = JSON.parse(fs.readFileSync(file));
 	if(allCourses === undefined){
@@ -134,24 +159,24 @@ async function pushDataToDatabase(){
 			for(subject in allCourses[term].colleges[college].subjects){
 				for(course in allCourses[term].colleges[college].subjects[subject].courses){
 					let item = allCourses[term].colleges[college].subjects[subject].courses[course];
-					query += con.escape(allCourses[term].name);
-					query += ", " + con.escape(allCourses[term].colleges[college].name);
-					query += ", " + con.escape(item.Subject);
-					query += ", " + con.escape(item.Number);
-					query += ", " + con.escape(item.Type);
-					query += ", " + con.escape(item.Method);
-					query += ", " + con.escape(item.Section);
-					query += ", " + con.escape(item.CRN);
-					query += ", " + con.escape(item.Description);
-					query += ", " + con.escape(JSON.stringify(item.Times));
-					query += ", " + con.escape(item.Instructor);
+					query += pool.escape(allCourses[term].name);
+					query += ", " + pool.escape(allCourses[term].colleges[college].name);
+					query += ", " + pool.escape(item.Subject);
+					query += ", " + pool.escape(item.Number);
+					query += ", " + pool.escape(item.Type);
+					query += ", " + pool.escape(item.Method);
+					query += ", " + pool.escape(item.Section);
+					query += ", " + pool.escape(item.CRN);
+					query += ", " + pool.escape(item.Description);
+					query += ", " + pool.escape(JSON.stringify(item.Times));
+					query += ", " + pool.escape(item.Instructor);
 					query += "),\n(";
 					totalRequests++;
 				}
 			}
 			query = query.slice(0,-3) + ";";	
 			actualRequests++;		
-			con.query(query, (err,rows,field)=>{
+			pool.query(query, (err,rows,field)=>{
 				if(err && !String(err).includes("ER_DUP_ENTRY")){
 					console.log("Error with query\n" + err);
 				}
@@ -162,13 +187,5 @@ async function pushDataToDatabase(){
 	console.log("actualRequests: " + actualRequests);
 }
 
-
-async function initialConnect(){
-	await connectToDatabase.then(console.log);
-	if(!sqlDisconnected){
-	//starts the listener
-		app.listen(app.get('port'));
-		console.log("Listening on port:" + app.get('port'));
-	}
-}
-initialConnect();
+app.listen(app.get('port'));
+console.log("Listening on port:" + app.get('port'));

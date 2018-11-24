@@ -1,8 +1,25 @@
 var allSchedules = [];
 var classes = [];
-var term;
+var term = "";
 var restrictions = [];
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "each day"];
+
+
+
+function sendPOSTRender(page){
+  $.ajax({
+    type: "POST",
+    url : "render",
+    data: {page : page},
+    success:(res)=>{
+      $("#content").html(res);
+    },
+    error:(res)=>{
+      $("#content").html(res);
+    }
+  })
+}
+
 
 $(document).ready(() => {
   createRestrictionInput();
@@ -138,7 +155,6 @@ function convertTimeWithoutAMPM(time){
 }
 
 function findSchedules(){
-  console.log("Entered findSchedules");
   parsedRestrictions = [];
   for(var restriction of restrictions){
     var start = "";
@@ -175,17 +191,16 @@ function findSchedules(){
     }
   }
 
-  console.log(classes);
-
 
   $.ajax({
     type: 'POST',
     url: 'classes',
     contentType: "application/json",
     dataType: 'json',
-    data: JSON.stringify({courses : classes, term : "Spring Quarter 18-19"}),//$("#term").val()}),
+    data: JSON.stringify({courses : classes, term : term}),
     success: (result) => {
       findAllSchedules(result, parsedRestrictions);
+      sendPOSTRender("calendar");
     }
   });
 }

@@ -1,13 +1,11 @@
-
 function updateEvents(indx) {
 	var events = [];
 	var colors = ['#e6194B', '#f58231', '#800000', '#000075', '#3cb44b', '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#000000', '#9A6324', '#469990'];
 	var courses = allSchedules[indx];
-	// var courses = JSON.parse('[{"subject":"CS","number":"260","instrType":"Lecture","instrMethod":"Face to Face","section":"002","crn":"21663","descr":"Data Structures","instructor":"Kurt Schmidt","time":[{"M":"2:00pm - 2:50pm"},{"W":"2:00pm - 2:50pm"},{"F":"2:00pm - 2:50pm"}]},{"subject":"CS","number":"283","instrType":"Lecture","instrMethod":"Face to Face","section":"001","crn":"21356","descr":"Systems Programming","instructor":"Constantine Katsinis","time":[{"M":"6:00pm - 8:50pm"}]},{"subject":"MATH","number":"221","instrType":"Lecture","instrMethod":"Face to Face","section":"001","crn":"20095","descr":"Discrete Mathematics","instructor":"Marci A Perlstadt","time":[{"M":"9:00am - 9:50am"},{"W":"9:00am - 9:50am"},{"F":"9:00am - 9:50am"}]},{"subject":"MATH","number":"T480","instrType":"Lecture","instrMethod":"Face to Face","section":"001","crn":"25862","descr":"Theory of Computation","instructor":"Robert A Hicks","time":[{"M":"1:00pm - 1:50pm"},{"W":"1:00pm - 1:50pm"},{"F":"1:00pm - 1:50pm"}]},{"subject":"BIO","number":"349","instrType":"Lecture","instrMethod":"Face to Face","section":"001","crn":"23098","descr":"Behavioral Neuroscience","instructor":"Michael R Akins, Anna Denise R Garcia","time":[{"T":"12:30pm - 1:50pm"},{"R":"12:30pm - 1:50pm"}]},{"subject":"PHIL","number":"311","instrType":"Lecture","instrMethod":"Face to Face","section":"130","crn":"21728","descr":"Ethics and Information Technology","instructor":"Roger J Magyar","time":[{"W":"3:30pm - 4:50pm"}]}]');
 
 	for (var j=0; j<courses.length; j++) {
 		var course = courses[j];
-		var times = course.time;
+		var times = JSON.parse(course.times);
 		for (var i=0; i < times.length; i++) {
 			for (day in times[i]) {
 				var start = createDate(day, times[i][day].split(" - ")[0]).getTime();
