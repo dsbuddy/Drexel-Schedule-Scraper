@@ -3,6 +3,7 @@ var classes = [];
 var term = "";
 var restrictions = [];
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "each day"];
+var defaultContent = "";
 
 
 
@@ -23,7 +24,18 @@ function sendPOSTRender(page){
 
 $(document).ready(() => {
   createRestrictionInput();
-})
+  defaultContent = $("#content").html();
+});
+
+function showCourseSelect(){
+  if(term != ""){
+    $("#content").html(defaultContent);
+    $('#termInput').hide();
+    $('#classInput').show();
+    updateClassTable();
+    updateRestrictionTable();
+  }
+}
 
 function addList(list, item){
   if(item){
