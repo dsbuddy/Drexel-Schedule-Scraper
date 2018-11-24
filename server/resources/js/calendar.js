@@ -21,7 +21,7 @@ function updateEvents(indx) {
 
 function createContent(course) {
 	var res = '';
-	res += course.descr + ' - ' + course.instructor;
+	res += course.description + ' - ' + course.instructor;
 	return res;
 }
 
@@ -137,4 +137,5 @@ $(document).ready(function() {
 			});
 		}
 	});
+
 });

@@ -15,6 +15,10 @@
   	color: fff;
   }
 
+  .popover-header {
+	  color: black; /* bootstrap default styles make it black. undo */
+   }
+
   .fc-title, .fc-content .fc-time {
   	color: white;
   	text-align: center;
