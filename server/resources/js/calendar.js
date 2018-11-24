@@ -1,20 +1,20 @@
+
 function updateEvents(indx) {
 	var events = [];
 	var colors = ['#e6194B', '#f58231', '#800000', '#000075', '#3cb44b', '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#000000', '#9A6324', '#469990'];
 	var courses = allSchedules[indx];
-
 	for (var j=0; j<courses.length; j++) {
 		var course = courses[j];
 		var times = JSON.parse(course.times);
-		for (var i=0; i < times.length; i++) {
-			for (day in times[i]) {
-				var start = createDate(day, times[i][day].split(" - ")[0]).getTime();
-				var end = createDate(day, times[i][day].split(" - ")[1]).getTime();
-				var content = createContent(course);
-				events.push(createEvent(course.subject + " " + course.number, start, end, colors[j], content));
-			}
+		console.log(times);
+		for (day in times) {
+			console.log(day);
+			console.log(times[day]);
+			var start = createDate(day, times[day].split("-")[0]).getTime();
+			var end = createDate(day, times[day].split("-")[1]).getTime();
+			var content = createContent(course);
+			events.push(createEvent(course.subject + " " + course.number, start, end, colors[j], content));
 		}
-
 	}
 	return events;
 }

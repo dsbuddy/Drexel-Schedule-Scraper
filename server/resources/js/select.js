@@ -212,7 +212,11 @@ function findSchedules(){
     data: JSON.stringify({courses : classes, term : term}),
     success: (result) => {
       findAllSchedules(result, parsedRestrictions);
-      sendPOSTRender("calendar");
+      if(allSchedules == []){
+          alert("No possible schedules found");
+      }else{
+          sendPOSTRender("calendar");
+      }
     }
   });
 }
