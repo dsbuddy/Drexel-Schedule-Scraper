@@ -23,6 +23,32 @@ function sendPOSTRender(page){
 
 
 $(document).ready(() => {
+  /* Click enter to run */
+  // var selectTermInput = document.getElementById('selectTermInput');
+  // selectTermInput.addEventListener('keyup', function(event){
+  //   event.preventDefault();
+  //   if (event.keyCode=13){
+  //     document.getElementById('selectTermButton').click();
+  //   }
+  // });
+
+  // var addRestrictionInput = document.getElementById('addRestrictionInput');
+  // addRestrictionInput.addEventListener('change', function(event){
+  //   event.preventDefault();
+  //   if (event.keyCode=13){
+  //     document.getElementById('addRestrictionButton').click();
+  //   }
+  // });
+
+  // var addClassInput = document.getElementById('addClassInput');
+  // addClassInput.addEventListener('keyup', function(event){
+  //   event.preventDefault();
+  //   if (event.keyCode=13){
+  //     document.getElementById('addClassButton').click();
+  //   }
+  // });
+
+
   createRestrictionInput();
   defaultContent = $("#content").html();
 });
@@ -30,8 +56,8 @@ $(document).ready(() => {
 function showCourseSelect(){
   if(term != ""){
     $("#content").html(defaultContent);
-    $('#termInput').hide();
-    $('#classInput').show();
+    $('#term-input-group').hide();
+    $('#course-input-group').show();
     updateClassTable();
     updateRestrictionTable();
   }
@@ -71,8 +97,8 @@ function selectTerm(){
   if (termAttr.val() != "") {
     term = termAttr.val();
     termAttr.val('');
-    $('#termInput').hide();
-    $('#classInput').show();
+    $('#term-input-group').hide();
+    $('#course-input-group').show();
   }
 }
 

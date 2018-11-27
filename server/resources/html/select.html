@@ -21,77 +21,60 @@
 	<script src="/resources/js/scheduler.js"></script>
 
     <!-- Custom styles for this template -->
-    <link href="./resources/css/select.css" rel="stylesheet">
     <title>Schedule Boy</title>
 </head>
 <body>
-	<div class="site-wrapper">
-		<div class="site-wrapper-inner">
-			<div class="cover-container">
-				<div class="masthead clearfix">
-					<div class="inner">
-						<h3 class="masthead-brand">Schedule Boy</h3>
-						<nav class="nav nav-masthead">
-			                <a class="nav-link" href="/index">Home</a>
-			                <a class="nav-link active" href="#" onclick="showCourseSelect();event.preventDefault();">Create Schedule</a>
-			                <a class="nav-link" href="#">About</a>
-              			</nav>
-            		</div>
-          		</div>
-
-          		<div id="content">
-          			<div class="container-fluid">
-          				<div id="termInput">
-							<div class="row">
-								<div class="col-md-12">
-									<h4>Select Term</h4>
-									<div class="input-group">
-										<input id='selectTermInput' type="text" class="form-control" id="term-name"></input>
-										<button id='selectTermButton' class="btn btn-success" onclick="selectTerm()">Submit</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div id="classInput">
-							<h3>Select Courses</h3>
-							<div class="row">
-								<div class="col-md-6">
-									<h4>I want to take</h4>
-									<div class="input-group">
-										<input id='addClassInput' type="text" class="form-control" id="class-name"></input>
-										<button id='addClassButton' class="btn btn-success" onclick="addClass()">and</button>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<h4>but I don't want classes</h4>
-									<div class="input-group">
-										<select id='addRestrictionInput' class="form-control" id="restriction-type" onchange="createRestrictionInput()">
-											<option selected>on</option>
-											<option>before</option>
-											<option>after</option>
-											<option>between</option>
-										</select>
-										<div id="restriction-input"></div>
-										<button id='addRestrictionButton' class="btn btn-success"  onclick="addRestriction()">or</button>
-									</div>
-								</div>
-							</div>
-							<div class="row mt-3">
-								<div class="col-md-6" id="class-table"></div>
-								<div class="col-md-6" id="restriction-table"></div>
-							</div>
-							<div class="row">
-								<div class="col-md-12 text-center">
-									<button class="btn btn-large btn-primary" onclick="findSchedules()">Find schedules</button>
-								</div>
-							</div>
-						</div>
+	<div id="content" class="container">
+		<div id="term-input-group" class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6 text-center">
+				<h3>Select Term</h3>
+				<div class="input-group">
+					<input type="text" class="form-control" id="term-name"></input>
+					<button class="btn btn-success" onclick="selectTerm()">Select Term</button>
+				</div>
+			</div>
+			<div class="col-md-3"></div>
+		</div>
+		<div id="course-input-group" style="display:none;">
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<h3>Select Courses</h3>
+					<br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<h4>I want to take</h4>
+					<div class="input-group">
+						<input type="text" class="form-control" id="class-name"></input>
+						<button class="btn btn-success" onclick="addClass()">Add Class</button>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<h4>But I don't want classes</h4>
+					<div class="input-group">
+						<select class="form-control" id="restriction-type" onchange="createRestrictionInput()">
+							<option selected>on</option>
+							<option>before</option>
+							<option>after</option>
+							<option>between</option>
+						</select>
+					<div id="restriction-input"></div>
+						<button class="btn btn-success" onclick="addRestriction()">Add Restriction</button>
 					</div>
 				</div>
 			</div>
+			<div class="row mt-3">
+				<div class="col-md-6" id="class-table"></div>
+				<div class="col-md-6" id="restriction-table"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<button class="btn btn-large btn-primary" onclick="findSchedules()">Find schedules</button>
+				</div>
+			</div>
 		</div>
-    </div>
-
-
+	</div>
 </body>
 </html>
