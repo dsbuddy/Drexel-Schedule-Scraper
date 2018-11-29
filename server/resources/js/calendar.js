@@ -5,7 +5,15 @@ function updateEvents(indx) {
 	var courses = allSchedules[indx];
 	for (var j=0; j<courses.length; j++) {
 		var course = courses[j];
+		console.log(course);
 		var times = JSON.parse(course.times);
+		var online = false;
+		if (times['T'] == 'TBD') {
+			times = {
+				'M': '12:00am-12:00pm'
+			};
+			online = true;
+		}
 		console.log(times);
 		for (day in times) {
 			console.log(day);
@@ -13,7 +21,8 @@ function updateEvents(indx) {
 			var start = createDate(day, times[day].split("-")[0]).getTime();
 			var end = createDate(day, times[day].split("-")[1]).getTime();
 			var content = createContent(course);
-			events.push(createEvent(course.subject + " " + course.number, start, end, colors[j], content));
+			console.log(createEvent(course.subject + " " + course.number, start, end, colors[j], content, online));
+			events.push(createEvent(course.subject + " " + course.number, start, end, colors[j], content, online));
 		}
 	}
 	return events;
@@ -25,13 +34,23 @@ function createContent(course) {
 	return res;
 }
 
-function createEvent(title, start, end, color, content) {
+function createEvent(title, start, end, color, content, online) {
+	if (online) {
+		return {
+			title: title,
+			start: start,
+			color: color,
+			description: content,
+			allDay: true
+		}
+	}
 	var event = {
 		title: title,
 		start: start,
 		end: end,
 		color: color,
-		description: content
+		description: content,
+		allDay: false
 	};
 	return event
 }
@@ -121,7 +140,8 @@ $(document).ready(function() {
 		},
 		defaultDate: '2017-01-01',
 		defaultView: 'agendaWeek',
-		allDaySlot: false,
+		allDayText: 'Online',
+		allDaySlot: true,
 		columnHeaderFormat: 'ddd',
 		minTime: '7:00',
 		maxTime: '23:00',
