@@ -129,7 +129,6 @@ function findAllSchedules(classes, restrictions) {
     }
   }
   console.log(restrictions);
-  for()
   // console.log(newClasses);
   findPossibleSchedules(newClasses, list, []);
   allSchedules = list;
