@@ -48,7 +48,18 @@ $(document).ready(() => {
   //   }
   // });
 
-
+  $.ajax({
+    url: '/allTerms',
+    type: 'GET',
+    success: (rows) => {
+      $('#term-name').html('<option disabed selected>--Select a Term--</option>');
+      for(term of rows){
+        var option = document.createElement('option');
+        option.innerHTML = term["term"];
+        $('#term-name').append(option);
+      }
+    }
+  })
   createRestrictionInput();
   defaultContent = $("#content").html();
 });
@@ -94,11 +105,23 @@ function addClass(){
 
 function selectTerm(){
   var termAttr = $('#term-name');
-  if (termAttr.val() != "") {
-    term = termAttr.val();
+  if (termAttr.val() != "--Select a Term--") {
+    termString = termAttr.val();
+    term = termString
     termAttr.val('');
-    $('#term-input-group').hide();
-    $('#course-input-group').show();
+    $.ajax({
+      url: '/allClasses',
+      type: 'GET',
+      data: {
+        term: termString
+      },
+      success: (rows) => {
+        $('#class-name').autocomplete({source: rows.map((x) => x["ID"])});
+        $('#term-input-group').hide();
+        $('#course-input-group').show();
+      }
+    })
+
   }
 }
 
@@ -237,6 +260,7 @@ function findSchedules(){
     dataType: 'json',
     data: JSON.stringify({courses : classes, term : term}),
     success: (result) => {
+      console.log(result);
       findAllSchedules(result, parsedRestrictions);
       if(allSchedules == []){
           alert("No possible schedules found");

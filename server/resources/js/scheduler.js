@@ -74,11 +74,6 @@ function convertTime(time) {
 
 function isValidSchedule(sectionToAdd, schedule){
   for (otherClass of schedule){
-    console.log(otherClass);
-    console.log(sectionToAdd);
-	 console.log("TIMES ---------------");
-	 console.log(otherClass.times);
-	 console.log("END -----------------");
     if(overlap(otherClass.times, sectionToAdd.times)){
       return false;
     }
@@ -103,6 +98,22 @@ function findPossibleSchedules(classes, list, schedule) {
 
 function findAllSchedules(classes, restrictions) {
   var list = [];
-  findPossibleSchedules(classes, list, []);
+  var newClasses = [];
+  for(var i = 0; i < classes.length; i++){
+    types = {};
+    for(var j = 0; j < classes[i].length; j++){
+      section = classes[i][j];
+      if(section["type"] in types){
+        types[section["type"]].push(section)
+      }
+      else{
+        types[section["type"]] = [section];
+      }
+    }
+    for(var key in types){
+      newClasses.push(types[key]);
+    }
+  }
+  findPossibleSchedules(newClasses, list, []);
   allSchedules = list;
 }
