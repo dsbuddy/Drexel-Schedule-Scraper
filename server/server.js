@@ -35,18 +35,18 @@ pool.on('release', function (connection) {
 
 app.get("/",(req,res)=>{
 	res.write(fs.readFileSync(__dirname + "/resources/html/index.html"));
-	res.send();
+	res.end();
 });
 
 app.get("/index", (req,res)=>{
 	res.write(fs.readFileSync(__dirname + "/resources/html/index.html"));
-	res.send();
+	res.end();
 });
 
 
 app.get("/select", (req,res)=>{
 	res.write(fs.readFileSync(__dirname + "/resources/html/select.html"));
-	res.send();
+	res.end();
 });
 
 app.post("/render", (req,res)=>{
@@ -54,7 +54,7 @@ app.post("/render", (req,res)=>{
 	if(req.body.page === undefined){
 		res.status(200);
 		res.write("Could not find page");
-		res.send();
+		res.end();
 		return;
 	}
 	switch(req.body.page){
@@ -71,7 +71,7 @@ app.post("/render", (req,res)=>{
 			res.status(200);
 			res.write("Could not find page");
 	}
-	res.send();
+	res.end();
 });
 
 app.post("/classes", (req, res)=>{
@@ -94,7 +94,7 @@ app.post("/classes", (req, res)=>{
 		if(err){
 			res.status("200");
 			res.write("Error with query");
-			res.send();
+			res.end();
 			return;
 		}
 		for(row in rows){
@@ -109,6 +109,7 @@ app.post("/classes", (req, res)=>{
 });
 
 app.get("/allTerms", (req,res)=>{
+	console.log("Entered allTerms");
 	query = "SELECT DISTINCT term FROM courses;";
 	pool.query(query, (err,rows, field)=>{
 		if(err){
@@ -123,6 +124,7 @@ app.get("/allTerms", (req,res)=>{
 });
 
 app.get("/allClasses", (req,res)=>{
+	console.log("Entered allCalsses");
 	if(req.query.term == undefined){
 		res.status(200);
 		res.write("Error with query");
@@ -138,7 +140,7 @@ app.get("/allClasses", (req,res)=>{
 			return;
 		}
 		res.json(rows);
-		res.send();
+		res.end();
 	});
 });
 

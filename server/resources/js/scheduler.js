@@ -1,16 +1,15 @@
-
 /*
 //TESTS
 var class4 = {
-        'M': '12:00pm - 12:50pm',
-        'W': '12:00pm - 12:50pm',
-        'F': '12:00pm - 12:50pm'
+        'M': '2:00pm - 3:50pm',
+        'W': '2:00pm - 3:50pm'//,
+        // 'F': '12:00pm - 12:50pm'
       };
 
 var class5 = {
-        'M': '11:00am - 11:20am',
-        'W': '11:00am - 11:20am',
-        'F': '11:00am - 11:20am'
+        'M': '2:00pm - 2:50pm',
+        'W': '2:00pm - 2:50pm',
+        'F': '2:00pm - 2:50pm'
       };
 
 var class6 = {
@@ -19,23 +18,30 @@ var class6 = {
         'F': '11:30am - 11:50am'
       };
 
-console.log(overlap(class4, class5));
-console.log(overlap(class4, class6));
-console.log(overlap(class5, class6));
+console.log("OVERLAP TESTS\n-------------------------------------------\n")
+// console.log(overlap(class4, class5));
+// console.log(overlap(class4, class6));
+// console.log(overlap(class5, class6));
 */
 
 function overlap(times1, times2) {
-  var res = false;
+  if(times1["T"] == "TBD" || times2["T"] == "TBD"){
+    return false;
+  }
   for (var day1 in times1) {
     for (var day2 in times2) {
-      res = res || overlapTimes(convert(day1, times1[day1]), convert(day2, times2[day2]));
+      if(overlapTimes(convert(day1, times1[day1]), convert(day2, times2[day2]))){
+        return true;
+      }
     }
   }
-  return res;
+  return false;
 }
 
 function convert(day, time) {
-  var timeList = time.split(" - ");
+  // console.log(day);
+  // console.log(time);
+  var timeList = time.split("-");
   var boundaries = {
     "startTime" : dayConvert(day, timeList[0]),
     "endTime" : dayConvert(day, timeList[1])
@@ -61,7 +67,8 @@ function dayConvert(day, time) {
 
 
 function convertTime(time) {
-  var hours = Number(time.match(/^(\d+)/)[1]);
+    // console.log(time);
+    var hours = Number(time.match(/^(\d+)/)[1]);
     var minutes = Number(time.match(/:(\d+)/)[1]);
     var AMPM = time.match(/\s?([AaPp][Mm]?)$/)[1];
     var pm = ['P', 'p', 'PM', 'pM', 'pm', 'Pm'];
@@ -74,6 +81,9 @@ function convertTime(time) {
 
 function isValidSchedule(sectionToAdd, schedule){
   for (otherClass of schedule){
+    // console.log(otherClass.number + " " + JSON.otherClass.times);
+    // console.log(sectionToAdd.number + " " + sectionToAdd.times);
+    // console.log("\n-----------------------\n")
     if(overlap(otherClass.times, sectionToAdd.times)){
       return false;
     }
@@ -84,14 +94,17 @@ function isValidSchedule(sectionToAdd, schedule){
 function findPossibleSchedules(classes, list, schedule) {
   if (classes.length == 0){
     list.push(schedule);
-    return true
+    return ;
   }
   for (section of classes[0]){
+    // console.log("++++++++++++++++++++++++++++++++++\n");
+    // console.log(section);
+    // console.log(schedule);
+    // console.log("++++++++++++++++++++++++++++++++++\n");
     if (isValidSchedule(section, schedule)){
-      newSchedule = schedule.slice()
-      newSchedule.push(section)
-      if(findPossibleSchedules(classes.slice(1), list, newSchedule)){
-      }
+      newSchedule = schedule.slice();
+      newSchedule.push(section);
+      findPossibleSchedules(classes.slice(1), list, newSchedule)
     }
   }
 }
@@ -103,6 +116,7 @@ function findAllSchedules(classes, restrictions) {
     types = {};
     for(var j = 0; j < classes[i].length; j++){
       section = classes[i][j];
+      section.times = JSON.parse(section.times);
       if(section["type"] in types){
         types[section["type"]].push(section)
       }
@@ -114,6 +128,10 @@ function findAllSchedules(classes, restrictions) {
       newClasses.push(types[key]);
     }
   }
+  console.log(restrictions);
+  for()
+  // console.log(newClasses);
   findPossibleSchedules(newClasses, list, []);
   allSchedules = list;
+  // console.log(allSchedules);
 }

@@ -4,7 +4,7 @@
 	<meta charset='utf-8' />
 	<!-- JQUERY -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
 
 	<!-- Calendar -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -19,7 +19,7 @@
 	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'></link>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha256-BJ/G+e+y7bQdrYkS2RBTyNfBHpA9IuGaPmf9htub5MQ=" crossorigin="anonymous" />
 	<!-- clientside code -->
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
 	<script src="/resources/js/select.js"></script>
 	<script src="/resources/js/scheduler.js"></script>
 
@@ -33,7 +33,9 @@
 			<div class="col-md-6 text-center">
 				<h3>Select Term</h3>
 				<div class="input-group">
-					<select class="form-control" id="term-name"></select>
+					<!-- <select class="form-control" id="term-name"></select> -->
+					<input list="termsList" id="term-name">
+					<datalist id="termsList"></datalist>
 					<button class="btn btn-success" onclick="selectTerm()">Select Term</button>
 				</div>
 			</div>
@@ -50,7 +52,9 @@
 				<div class="col-md-6">
 					<h4>I want to take</h4>
 					<div class="input-group ui-widget">
-						<input type="text" class="form-control" id="class-name"></input>
+						<!-- <input type="text" class="form-control" id="class-name"></input> -->
+						<input list="courseList" id="class-name">
+						<datalist id="courseList"></datalist>
 						<button class="btn btn-success" onclick="addClass()">Add Class</button>
 					</div>
 					<div class="col-md-12" id="class-table"></div>

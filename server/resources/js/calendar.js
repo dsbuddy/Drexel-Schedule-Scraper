@@ -5,8 +5,8 @@ function updateEvents(indx) {
 	var courses = allSchedules[indx];
 	for (var j=0; j<courses.length; j++) {
 		var course = courses[j];
-		console.log(course);
-		var times = JSON.parse(course.times);
+		//console.log(course)
+;		var times = course.times;
 		var online = false;
 		if (times['T'] == 'TBD') {
 			times = {
@@ -14,14 +14,14 @@ function updateEvents(indx) {
 			};
 			online = true;
 		}
-		console.log(times);
+		//console.log(times);
 		for (day in times) {
-			console.log(day);
-			console.log(times[day]);
+			// console.log(day);
+			// console.log(times[day]);
 			var start = createDate(day, times[day].split("-")[0]).getTime();
 			var end = createDate(day, times[day].split("-")[1]).getTime();
 			var content = createContent(course);
-			console.log(createEvent(course.subject + " " + course.number, start, end, colors[j], content, online));
+			//console.log(createEvent(course.subject + " " + course.number, start, end, colors[j], content, online));
 			events.push(createEvent(course.subject + " " + course.number, start, end, colors[j], content, online));
 		}
 	}
@@ -105,7 +105,7 @@ function convertTime(time) {
 }
 
 function updateTitle(indx) {
-	$("#scheduleNum").html("<center><h1>Schedule " + String(indx+1) + " / " + String(allSchedules.length-1) + "</h1></center>");
+	$("#scheduleNum").html("<center><h1>Schedule " + String(indx+1) + " / " + String(allSchedules.length) + "</h1></center>");
 }
 
 
@@ -113,7 +113,7 @@ $(document).ready(function() {
 	var indx = 0;
 	/* Change to next schedule */
 	$('.next').click(function() {
-		if (indx < (allSchedules.length - 2)) {
+		if (indx < (allSchedules.length - 1)) {
 			indx++;
 			$('#calendar').fullCalendar('removeEvents');
 			$('#calendar').fullCalendar('addEventSource', updateEvents(indx));
