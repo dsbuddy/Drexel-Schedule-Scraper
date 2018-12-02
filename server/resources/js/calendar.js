@@ -110,6 +110,7 @@ function updateTitle(indx) {
 
 
 $(document).ready(function() {
+	$("#content").toggle();
 	var indx = 0;
 	/* Change to next schedule */
 	$('.next').click(function() {

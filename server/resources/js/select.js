@@ -198,6 +198,8 @@ function convertTimeWithoutAMPM(time){
 }
 
 function findSchedules(){
+  $("#loader").toggle();
+  $("#content").toggle();
   parsedRestrictions = [];
   for(var restriction of restrictions){
     var start = "";
@@ -243,9 +245,13 @@ function findSchedules(){
     data: JSON.stringify({courses : classes, term : term}),
     success: (result) => {
       //start finding schedules dialog
+      // $("#loader").toggle();
       findAllSchedules(result, parsedRestrictions);
       //end finding schedules dialog
+      $("#loader").toggle();
+      
       if(allSchedules.length == 0){
+          $("#content").toggle();
           alert("No possible schedules found");
       }else{
           sendPOSTRender("calendar");
