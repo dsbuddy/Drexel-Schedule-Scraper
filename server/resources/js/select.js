@@ -23,40 +23,18 @@ function sendPOSTRender(page){
 
 
 $(document).ready(() => {
-  /* Click enter to run */
-  // var selectTermInput = document.getElementById('selectTermInput');
-  // selectTermInput.addEventListener('keyup', function(event){
-  //   event.preventDefault();
-  //   if (event.keyCode=13){
-  //     document.getElementById('selectTermButton').click();
-  //   }
-  // });
-
-  // var addRestrictionInput = document.getElementById('addRestrictionInput');
-  // addRestrictionInput.addEventListener('change', function(event){
-  //   event.preventDefault();
-  //   if (event.keyCode=13){
-  //     document.getElementById('addRestrictionButton').click();
-  //   }
-  // });
-
-  // var addClassInput = document.getElementById('addClassInput');
-  // addClassInput.addEventListener('keyup', function(event){
-  //   event.preventDefault();
-  //   if (event.keyCode=13){
-  //     document.getElementById('addClassButton').click();
-  //   }
-  // });
 
   $.ajax({
     url: '/allTerms',
     type: 'GET',
     success: (rows) => {
-      $('#term-name').html('<option disabed selected>--Select a Term--</option>');
+      $("#termsList").html("");
+      //$('#term-name').html('<option disabed selected>--Select a Term--</option>');
       for(term of rows){
-        var option = document.createElement('option');
-        option.innerHTML = term["term"];
-        $('#term-name').append(option);
+        $("#termsList").append("<option value='"+term["term"]+"'>");
+        //var option = document.createElement('option');
+        //option.innerHTML = term["term"];
+        //$('#term-name').append(option);
       }
     }
   })
@@ -116,7 +94,11 @@ function selectTerm(){
         term: termString
       },
       success: (rows) => {
-        $('#class-name').autocomplete({source: rows.map((x) => x["ID"])});
+        // $('#class-name').autocomplete({source: rows.map((x) => x["ID"])});
+        $("#courseList").html("");
+        for (course of rows) {
+          $("#courseList").append("<option value='" + course["ID"] + "'>");
+        }
         $('#term-input-group').hide();
         $('#course-input-group').show();
       }
@@ -216,6 +198,8 @@ function convertTimeWithoutAMPM(time){
 }
 
 function findSchedules(){
+  $("#loader").toggle();
+  $("#content").toggle();
   parsedRestrictions = [];
   for(var restriction of restrictions){
     var start = "";
@@ -260,9 +244,14 @@ function findSchedules(){
     dataType: 'json',
     data: JSON.stringify({courses : classes, term : term}),
     success: (result) => {
-      console.log(result);
+      //start finding schedules dialog
+      // $("#loader").toggle();
       findAllSchedules(result, parsedRestrictions);
-      if(allSchedules == []){
+      //end finding schedules dialog
+      $("#loader").toggle();
+      
+      if(allSchedules.length == 0){
+          $("#content").toggle();
           alert("No possible schedules found");
       }else{
           sendPOSTRender("calendar");

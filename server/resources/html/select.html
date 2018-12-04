@@ -4,7 +4,7 @@
 	<meta charset='utf-8' />
 	<!-- JQUERY -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
 
 	<!-- Calendar -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -19,7 +19,8 @@
 	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'></link>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha256-BJ/G+e+y7bQdrYkS2RBTyNfBHpA9IuGaPmf9htub5MQ=" crossorigin="anonymous" />
 	<!-- clientside code -->
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+  	<link rel="stylesheet" href="/resources/css/select.css" />
 	<script src="/resources/js/select.js"></script>
 	<script src="/resources/js/scheduler.js"></script>
 
@@ -27,13 +28,30 @@
     <title>Schedule Boy</title>
 </head>
 <body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded fixed-top">
+  		<a class="navbar-brand" href="index.html">Schedule Boy</a>
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="index">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="select">Create Schedule</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#">About</a>
+			</li>
+		</ul>
+	</nav>
+	<div id="loader" style="display: none;"></div>
+	<br><br><br><br>
 	<div id="content" class="container">
 		<div id="term-input-group" class="row">
 			<div class="col-md-3"></div>
 			<div class="col-md-6 text-center">
 				<h3>Select Term</h3>
 				<div class="input-group">
-					<select class="form-control" id="term-name"></select>
+					<input class="form-control input-lg" list="termsList" id="term-name">
+					<datalist id="termsList"></datalist>
 					<button class="btn btn-success" onclick="selectTerm()">Select Term</button>
 				</div>
 			</div>
@@ -46,37 +64,38 @@
 					<br>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-md-6">
-					<h4>I want to take</h4>
-					<div class="input-group ui-widget">
-						<input type="text" class="form-control" id="class-name"></input>
-						<button class="btn btn-success" onclick="addClass()">Add Class</button>
+			<div id="centeredInput">
+				<div class="row">
+					<div class="col-md-6">
+						<h4>I want to take</h4>
+						<div class="input-group ui-widget">
+							<!-- <input type="text" class="form-control" id="class-name"></input> -->
+							<input class="form-control input-lg" list="courseList" id="class-name">
+							<datalist id="courseList"></datalist>
+							<button class="btn btn-success" onclick="addClass()">Add Class</button>
+						</div>
+						<div class="col-md-12" id="class-table"></div>
 					</div>
-					<div class="col-md-12" id="class-table"></div>
-				</div>
-				<div class="col-md-6">
-					<h4>But I don't want classes</h4>
-					<div class="input-group">
-						<select class="form-control" id="restriction-type" onchange="createRestrictionInput()">
-							<option selected>on</option>
-							<option>before</option>
-							<option>after</option>
-							<option>between</option>
-						</select>
-					<div id="restriction-input"></div>
-						<button class="btn btn-success" onclick="addRestriction()">Add Restriction</button>
+					<div class="col-md-6">
+						<h4>But I don't want classes</h4>
+						<div class="input-group">
+							<select class="form-control" id="restriction-type" onchange="createRestrictionInput()">
+								<option selected>on</option>
+								<option>before</option>
+								<option>after</option>
+								<option>between</option>
+							</select>
+						<div id="restriction-input"></div>
+							<button class="btn btn-success" onclick="addRestriction()">Add Restriction</button>
+						</div>
+						<div class="col-md-12" id="restriction-table"></div>
 					</div>
-					<div class="col-md-12" id="restriction-table"></div>
 				</div>
-			</div>
-			<!-- <div class="row mt-3">
-				<div class="col-md-6" id="class-table"></div>
-				<div class="col-md-6" id="restriction-table"></div>
-			</div> -->
-			<div class="row">
-				<div class="col-md-12 text-center">
-					<button class="btn btn-large btn-primary" onclick="findSchedules()">Find schedules</button>
+				<br>
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<button class="btn btn-large btn-primary" onclick="findSchedules()">Find schedules</button>
+					</div>
 				</div>
 			</div>
 		</div>
