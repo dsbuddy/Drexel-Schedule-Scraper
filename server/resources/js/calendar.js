@@ -5,7 +5,7 @@ function updateEvents(indx) {
 	var courses = allSchedules[indx];
 	for (var j=0; j<courses.length; j++) {
 		var course = courses[j];
-		//console.log(course)
+		console.log(course)
 ;		var times = course.times;
 		var online = false;
 		if (times['T'] == 'TBD') {
@@ -14,14 +14,10 @@ function updateEvents(indx) {
 			};
 			online = true;
 		}
-		//console.log(times);
 		for (day in times) {
-			// console.log(day);
-			// console.log(times[day]);
 			var start = createDate(day, times[day].split("-")[0]).getTime();
 			var end = createDate(day, times[day].split("-")[1]).getTime();
 			var content = createContent(course);
-			//console.log(createEvent(course.subject + " " + course.number, start, end, colors[j], content, online));
 			events.push(createEvent(course.subject + " " + course.number, start, end, colors[j], content, online));
 		}
 	}
@@ -29,8 +25,7 @@ function updateEvents(indx) {
 }
 
 function createContent(course) {
-	var res = '';
-	res += course.description + ' - ' + course.instructor;
+	var res = course.description + ' - <b>Instructor:</b> ' + course.instructor + '<br /><b>Type:</b> ' + course.type + '<br /><b>Section:</b> ' + course.section + '<br /><b>CRN:</b> ' + course.crn;
 	return res;
 }
 
@@ -152,6 +147,7 @@ $(document).ready(function() {
 			$el.popover({
 			title: eventObj.description.split(' - ')[0],
 			content: eventObj.description.split(' - ')[1],
+			html: true,
 			trigger: 'hover',
 			placement: 'top',
 			container: 'body'
@@ -160,3 +156,4 @@ $(document).ready(function() {
 	});
 
 });
+
