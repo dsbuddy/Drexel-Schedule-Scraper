@@ -49,6 +49,47 @@ app.get("/select", (req,res)=>{
 	res.end();
 });
 
+app.get('/tms', function(req, res) {
+	if (Object.keys(req.query).length === 0) {
+		res.status(400);
+		res.send("No parameters provided");
+	} else {
+		var query = "SELECT * FROM courses WHERE";
+		var params = {};
+		if(req.query.term !== undefined) params[term]=con.escape(req.query.term);
+		if(req.query.college !== undefined) params[college]=con.escape(req.query.college);
+		if(req.query.subject !== undefined) params[subject]=con.escape(req.query.subject);
+		if(req.query.number !== undefined) params[number]=con.escape(req.query.number);
+		if(req.query.type !== undefined) params[type]=con.escape(req.query.type);
+		if(req.query.method !== undefined) params[method]=con.escape(req.query.method);
+		if(req.query.section !== undefined) params[section]=con.escape(req.query.section);
+		if(req.query.crn !== undefined) params[crn]=con.escape(req.query.crn);
+		if(req.query.description !== undefined) params[description]=con.escape(req.query.description);
+		if(req.query.times !== undefined) params[times]=con.escape(req.query.times);
+		if(req.query.instructor !== undefined) params[instructor]=con.escape(req.query.instructor);
+
+		for (var key in params) {
+			if (query.length === 27) {
+				query += " " + key + "=" + params[key];
+			} else {
+				query += " AND " + key + "=" + params[key];
+			}
+		}
+
+		pool.query(query, (err,rows, field)=>{
+			if(err){
+				res.status(300);
+				res.write("Error with query");
+				res.end();
+				return;
+			}
+			res.status(200);
+			res.json(rows);
+			res.end();
+		});
+	}
+});
+
 app.post("/render", (req,res)=>{
 	console.log("Entered render with: " + JSON.stringify(req.body));
 	if(req.body.page === undefined){
