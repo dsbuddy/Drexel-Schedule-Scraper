@@ -134,6 +134,7 @@ app.post("/classes", (req, res)=>{
 	pool.query(query, (err,rows,field)=>{
 		if(err){
 			res.status("200");
+			console.log("Error with Query:" + query);
 			res.write("Error with query");
 			res.end();
 			return;
@@ -165,7 +166,7 @@ app.get("/allTerms", (req,res)=>{
 });
 
 app.get("/allClasses", (req,res)=>{
-	console.log("Entered allCalsses");
+	console.log("Entered allClasses");
 	if(req.query.term == undefined){
 		res.status(200);
 		res.write("Error with query");

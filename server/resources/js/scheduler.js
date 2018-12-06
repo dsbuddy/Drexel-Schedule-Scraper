@@ -97,10 +97,6 @@ function findPossibleSchedules(classes, list, schedule) {
     return ;
   }
   for (section of classes[0]){
-    // console.log("++++++++++++++++++++++++++++++++++\n");
-    // console.log(section);
-    // console.log(schedule);
-    // console.log("++++++++++++++++++++++++++++++++++\n");
     if (isValidSchedule(section, schedule)){
       newSchedule = schedule.slice();
       newSchedule.push(section);
@@ -128,9 +124,46 @@ function findAllSchedules(classes, restrictions) {
       newClasses.push(types[key]);
     }
   }
-  console.log(restrictions);
-  // console.log(newClasses);
+  console.log(newClasses);
+  newClasses = filterRestrictions(newClasses, restrictions);
+  console.log(newClasses);
+  if(newClasses.length == 0){
+    allSchedules = list;
+    return ;
+  }
   findPossibleSchedules(newClasses, list, []);
   allSchedules = list;
-  // console.log(allSchedules);
+}
+
+function filterRestrictions(classes, restrictions) {
+  let newClasses = []
+  for(course of classes){
+    newClasses.push([]);
+  }
+  for(let restriction of restrictions){
+    let i = 0; 
+    for(let course of classes){
+      for(let section of course){
+        let confict = false;
+        for(let day in section.times){
+            if(section.times[day] == "TBD"){
+              break;
+            }
+            if(overlapTimes(convert(day, section.times[day]), restriction)){
+              confict = true;
+              break;
+            }
+        }
+        if(!confict){
+          newClasses[i].push(section);
+        }
+      }
+        console.log(newClasses[i].length);
+      if(newClasses[i].length == 0){
+        return [];
+      }
+      i++;
+    }
+  }
+  return newClasses;
 }

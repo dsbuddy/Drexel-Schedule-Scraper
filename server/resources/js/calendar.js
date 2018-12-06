@@ -5,7 +5,6 @@ function updateEvents(indx) {
 	var courses = allSchedules[indx];
 	for (var j=0; j<courses.length; j++) {
 		var course = courses[j];
-		console.log(course)
 ;		var times = course.times;
 		var online = false;
 		if (times['T'] == 'TBD') {
