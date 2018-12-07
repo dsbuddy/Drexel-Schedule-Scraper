@@ -55,26 +55,29 @@ app.get('/tms', function(req, res) {
 		res.send("No parameters provided");
 	} else {
 		var query = "SELECT * FROM courses WHERE";
-		var params = {};
-		if(req.query.term !== undefined) params[term]=con.escape(req.query.term);
-		if(req.query.college !== undefined) params[college]=con.escape(req.query.college);
-		if(req.query.subject !== undefined) params[subject]=con.escape(req.query.subject);
-		if(req.query.number !== undefined) params[number]=con.escape(req.query.number);
-		if(req.query.type !== undefined) params[type]=con.escape(req.query.type);
-		if(req.query.method !== undefined) params[method]=con.escape(req.query.method);
-		if(req.query.section !== undefined) params[section]=con.escape(req.query.section);
-		if(req.query.crn !== undefined) params[crn]=con.escape(req.query.crn);
-		if(req.query.description !== undefined) params[description]=con.escape(req.query.description);
-		if(req.query.times !== undefined) params[times]=con.escape(req.query.times);
-		if(req.query.instructor !== undefined) params[instructor]=con.escape(req.query.instructor);
+		var params = [];
+		console.log("TMS Get Request\nParameters Sent: " + JSON.stringify(req.query));
+		if(req.query.term !== undefined) params.push(["term", pool.escape(req.query.term)]);
+		if(req.query.college !== undefined) params.push(["college", pool.escape(req.query.college)]);
+		if(req.query.subject !== undefined) params.push(["subject", pool.escape(req.query.subject)]);
+		if(req.query.number !== undefined) params.push(["number", pool.escape(req.query.number)]);
+		if(req.query.type !== undefined) params.push(["type", pool.escape(req.query.type)]);
+		if(req.query.method !== undefined) params.push(["method", pool.escape(req.query.method)]);
+		if(req.query.section !== undefined) params.push(["section", pool.escape(req.query.section)]);
+		if(req.query.crn !== undefined) params.push(["crn", pool.escape(req.query.crn)]);
+		if(req.query.description !== undefined) params.push(["description", pool.escape(req.query.description)]);
+		if(req.query.times !== undefined) params.push(["times", pool.escape(req.query.times)]);
+		if(req.query.instructor !== undefined) params.push(["instructor", pool.escape(req.query.instructor)]);
 
-		for (var key in params) {
+		for (var i=0; i<params.length; i++) {
 			if (query.length === 27) {
-				query += " " + key + "=" + params[key];
+				query += " " + params[i][0] + "=" + params[i][1];
 			} else {
-				query += " AND " + key + "=" + params[key];
+				query += " AND " + params[i][0] + "=" + params[i][1];
 			}
 		}
+
+		console.log("Query: " + query);
 
 		pool.query(query, (err,rows, field)=>{
 			if(err){

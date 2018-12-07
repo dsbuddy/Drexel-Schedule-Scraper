@@ -76,15 +76,23 @@ function updateRestrictionTable(){
 }
 
 function addClass(){
-  addList(classes, $('#class-name').val());
+  addList(classes, $('#class-name').val().toUpperCase());
   $('#class-name').val('');
   updateClassTable();
+}
+
+function titleCase(str) {
+  str = str.toLowerCase().split(' ');
+  for (var i = 0; i < str.length; i++) {
+    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+  }
+  return str.join(' ');
 }
 
 function selectTerm(){
   var termAttr = $('#term-name');
   if (termAttr.val() != "--Select a Term--") {
-    termString = termAttr.val();
+    termString = titleCase(termAttr.val());
     term = termString
     termAttr.val('');
     $.ajax({
