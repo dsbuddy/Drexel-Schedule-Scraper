@@ -22,7 +22,53 @@ function sendPOSTRender(page){
 }
 
 
+
+
+
+
 $(document).ready(() => {
+
+  $("#term-name").keydown(function(event) {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      selectTerm();
+    }
+  });
+
+  $("#class-name").keydown(function(event) {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      addClass();
+    }
+  });
+
+  $("#restriction-input").keydown(function(event) {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      addRestriction();
+    }
+  });
+
+  $("#time1").keydown(function(event) {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      addRestriction();
+    }
+  });
+
+  $("#time2").keydown(function(event) {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      addRestriction();
+    }
+  });
+
+  $("#day-select").keydown(function(event) {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      addRestriction();
+    }
+  });
 
   $.ajax({
     url: '/allTerms',
@@ -75,10 +121,28 @@ function updateRestrictionTable(){
   $('#restriction-table').html(table);
 }
 
+function validClass(course) {
+  course = course.replace(/ /g,'');
+  // var courseOptions = $("#courseList").options;
+  var datalist = $("#courseList");
+  var children = datalist[0].children;
+  for (var i=0; i<children.length; i++) {
+    if (course == children[i].value.replace(/ /g,'')) {
+      return children[i].value;
+    }
+  }
+  return false;
+}
+
 function addClass(){
-  addList(classes, $('#class-name').val().toUpperCase());
-  $('#class-name').val('');
-  updateClassTable();
+  var temp = validClass($('#class-name').val().toUpperCase());
+  if (temp != false) {
+    addList(classes, temp);
+    $('#class-name').val('');
+    updateClassTable();
+  } else {
+    alert("Not a valid class");
+  }
 }
 
 function titleCase(str) {

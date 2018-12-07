@@ -106,14 +106,11 @@ function getCRN() {
 	$("#crnArea").val("");
 	$("#crnArea").toggle();
 	var schedule = allSchedules[indx];
-	for (var j=0; j<schedule.length; j++) {
+	for (var j=0; j<schedule.length-1; j++) {
 		var course = schedule[j];
-		if (j==0) {
-			$("#crnArea").val($("#crnArea").val() + course.crn);	
-		} else {
-			$("#crnArea").val($("#crnArea").val() + "\n" + course.crn);
-		}
+		$("#crnArea").val($("#crnArea").val() + course.crn + ",\n");	
 	}
+	$("#crnArea").val($("#crnArea").val() + course.crn);
 	$(function() {
 	    $('textarea').each(function() {
 	        $(this).height($(this).prop('scrollHeight'));
