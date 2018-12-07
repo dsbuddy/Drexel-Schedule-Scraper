@@ -1,11 +1,11 @@
-
+var indx = 0;
 function updateEvents(indx) {
 	var events = [];
 	var colors = ['#e6194B', '#f58231', '#800000', '#000075', '#3cb44b', '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#000000', '#9A6324', '#469990'];
 	var courses = allSchedules[indx];
 	for (var j=0; j<courses.length; j++) {
 		var course = courses[j];
-;		var times = course.times;
+		var times = course.times;
 		var online = false;
 		if (times['T'] == 'TBD') {
 			times = {
@@ -102,14 +102,32 @@ function updateTitle(indx) {
 	$("#scheduleNum").html("<center><h1>Schedule " + String(indx+1) + " / " + String(allSchedules.length) + "</h1></center>");
 }
 
+function getCRN() {
+	$("#crnArea").val("");
+	$("#crnArea").toggle();
+	var schedule = allSchedules[indx];
+	for (var j=0; j<schedule.length; j++) {
+		var course = schedule[j];
+		$("#crnArea").val($("#crnArea").val() + course.crn + "\n");
+	}
+	$(function() {
+	    $('textarea').each(function() {
+	        $(this).height($(this).prop('scrollHeight'));
+	    });
+	});
+}
+
+
+
 
 $(document).ready(function() {
 	$("#content").toggle();
-	var indx = 0;
+	indx = 0;
 	/* Change to next schedule */
 	$('.next').click(function() {
 		if (indx < (allSchedules.length - 1)) {
 			indx++;
+			$("#crnArea").hide();
 			$('#calendar').fullCalendar('removeEvents');
 			$('#calendar').fullCalendar('addEventSource', updateEvents(indx));
 			updateTitle(indx);
@@ -119,6 +137,7 @@ $(document).ready(function() {
 	$('.previous').click(function() {
 		if (indx > 0) {
 			indx--;
+			$("#crnArea").hide();
 			$('#calendar').fullCalendar('removeEvents');
 			$('#calendar').fullCalendar('addEventSource', updateEvents(indx));
 			updateTitle(indx);
@@ -152,6 +171,11 @@ $(document).ready(function() {
 			container: 'body'
 			});
 		}
+	});
+
+	$("#crnArea").click(function(){
+	    $("#crnArea").select();
+	    document.execCommand('copy');
 	});
 
 });
