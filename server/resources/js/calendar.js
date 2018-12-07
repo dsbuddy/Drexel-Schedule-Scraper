@@ -108,7 +108,11 @@ function getCRN() {
 	var schedule = allSchedules[indx];
 	for (var j=0; j<schedule.length; j++) {
 		var course = schedule[j];
-		$("#crnArea").val($("#crnArea").val() + course.crn + "\n");
+		if (j==0) {
+			$("#crnArea").val($("#crnArea").val() + course.crn);	
+		} else {
+			$("#crnArea").val($("#crnArea").val() + "\n" + course.crn);
+		}
 	}
 	$(function() {
 	    $('textarea').each(function() {
