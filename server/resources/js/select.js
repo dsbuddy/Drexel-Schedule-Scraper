@@ -123,7 +123,6 @@ function updateRestrictionTable(){
 
 function validClass(course) {
   course = course.replace(/ /g,'');
-  // var courseOptions = $("#courseList").options;
   var datalist = $("#courseList");
   var children = datalist[0].children;
   for (var i=0; i<children.length; i++) {
@@ -173,6 +172,7 @@ function selectTerm(){
         }
         $('#term-input-group').hide();
         $('#course-input-group').show();
+        defaultContent = $("#content").html();
       }
     })
 
@@ -182,6 +182,7 @@ function selectTerm(){
 function addRestriction(){
   addList(restrictions, getRestriction());
   updateRestrictionTable();
+  defaultContent = $("#content").html();
 }
 
 function createListTable(list, listName, callbackName){

@@ -110,7 +110,7 @@ function getCRN() {
 		var course = schedule[j];
 		$("#crnArea").val($("#crnArea").val() + course.crn + ",\n");	
 	}
-	$("#crnArea").val($("#crnArea").val() + course.crn);
+	$("#crnArea").val($("#crnArea").val() + allSchedules[indx][allSchedules[indx].length-1].crn);
 	$(function() {
 	    $('textarea').each(function() {
 	        $(this).height($(this).prop('scrollHeight'));
