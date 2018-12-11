@@ -1,30 +1,3 @@
-/*
-//TESTS
-var class4 = {
-        'M': '2:00pm - 3:50pm',
-        'W': '2:00pm - 3:50pm'//,
-        // 'F': '12:00pm - 12:50pm'
-      };
-
-var class5 = {
-        'M': '2:00pm - 2:50pm',
-        'W': '2:00pm - 2:50pm',
-        'F': '2:00pm - 2:50pm'
-      };
-
-var class6 = {
-        'M': '11:30am - 11:50am',
-        'W': '11:30am - 12:20pm',
-        'F': '11:30am - 11:50am'
-      };
-
-console.log("OVERLAP TESTS\n-------------------------------------------\n")
-// console.log(overlap(class4, class5));
-// console.log(overlap(class4, class6));
-// console.log(overlap(class5, class6));
-*/
-
-
 /* Checks if the two time objects overlap */
 function overlap(times1, times2) {
   if(times1["T"] == "TBD" || times2["T"] == "TBD"){
@@ -85,29 +58,8 @@ function convertTime(time) {
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Checks whether adding a section to the current schedule will still make it valid
 */
-
-
 function isValidSchedule(sectionToAdd, schedule){
   for (otherClass of schedule){
     // console.log(otherClass.number + " " + JSON.otherClass.times);
@@ -121,26 +73,7 @@ function isValidSchedule(sectionToAdd, schedule){
 }
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Recursive brute-force to find all possible valid schedules from the given sections
 */
 
 function findPossibleSchedules(classes, list, schedule) {
@@ -158,26 +91,8 @@ function findPossibleSchedules(classes, list, schedule) {
 }
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Filters sections by restrictions, i.e. if a restriction conflicts with a section
+it is purged. Then it populates a global variable with the possible schedules.
 */
 
 function findAllSchedules(classes, restrictions) {
@@ -209,34 +124,15 @@ function findAllSchedules(classes, restrictions) {
 }
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Filters sections by restrictions, i.e. if a restriction conflicts with a section
+it is purged.
 */
-
 function filterRestrictions(classes, restrictions) {
   let newClasses = []
   for(course of classes){
     newClasses.push([]);
   }
-  let i = 0; 
+  let i = 0;
   for(let course of classes){
     for(let section of course){
       let confict = false;

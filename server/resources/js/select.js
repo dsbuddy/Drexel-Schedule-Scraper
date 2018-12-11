@@ -8,26 +8,7 @@ var defaultContent = "";
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+request a specific page from the server to be rendered
 */
 
 function sendPOSTRender(page){
@@ -100,26 +81,7 @@ $(document).ready(() => {
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Populate dropdown with list of possible terms
 */
 
   $.ajax({
@@ -142,26 +104,7 @@ $(document).ready(() => {
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+After selecting a course, the course select dropdown is displayed
 */
 
 function showCourseSelect(){
@@ -176,26 +119,7 @@ function showCourseSelect(){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Add an non-null item to a list
 */
 
 function addList(list, item){
@@ -206,26 +130,7 @@ function addList(list, item){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+delete an item from a list, given the index of the item
 */
 
 function deleteItem(list, itemIndex, callback){
@@ -237,26 +142,7 @@ function deleteItem(list, itemIndex, callback){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+After a user selects or removes a class, update the class table
 */
 
 function updateClassTable(){
@@ -266,26 +152,7 @@ function updateClassTable(){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+After the user modifies a restriction, update the restriction table
 */
 
 function updateRestrictionTable(){
@@ -309,26 +176,7 @@ function validClass(course) {
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Add a class to the class list
 */
 
 function addClass(){
@@ -346,7 +194,7 @@ function addClass(){
 function titleCase(str) {
   str = str.toLowerCase().split(' ');
   for (var i = 0; i < str.length; i++) {
-    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
   }
   return str.join(' ');
 }
@@ -354,26 +202,7 @@ function titleCase(str) {
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Allows the user to select a term and get a list of available classes
 */
 function selectTerm(){
   var termAttr = $('#term-name');
@@ -405,26 +234,7 @@ function selectTerm(){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Add a resitriction to the restriction table
 */
 function addRestriction(){
   addList(restrictions, getRestriction());
@@ -435,26 +245,8 @@ function addRestriction(){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Create a table given a list of items. This will also add a delete button
+so that items can be removed from the table.
 */
 function createListTable(list, listName, callbackName){
   var table = document.createElement('table');
@@ -482,26 +274,7 @@ function createListTable(list, listName, callbackName){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Parse restrictions from the restriction table
 */
 function getRestriction(){
   var type = $('#restriction-type').val();
@@ -519,26 +292,8 @@ function getRestriction(){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Populate the restriction table based on the current type of restriction
+selected.
 */
 function createRestrictionInput(){
   var type = $("#restriction-type").val();
@@ -593,26 +348,7 @@ function convertTimeWithoutAMPM(time){
 
 
 /*
-
-  _   _ _      _         _____                                     _   
- | \ | (_)    | |       / ____|                                   | |  
- |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
- | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
- | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
- |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
-
-
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                                  | |                                                              
-                               __ | |  __                                                          
-                               \ \| | / /                                                          
-                                \ \_|/ /                                                           
-                                 \ \/ /                                                            
-                                  \  /                                                             
-                                   \/                                                              
-                                                
+Driver function to start brute forcing possible schedules.
 */
 function findSchedules(){
   $("#loader").toggle();
@@ -666,7 +402,7 @@ function findSchedules(){
       findAllSchedules(result, parsedRestrictions);
       //end finding schedules dialog
       $("#loader").toggle();
-      
+
       if(allSchedules.length == 0){
           $("#content").toggle();
           alert("No possible schedules found");
