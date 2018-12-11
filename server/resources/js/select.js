@@ -7,9 +7,7 @@ var defaultContent = "";
 
 
 
-/*
-request a specific page from the server to be rendered
-*/
+/* Request a specific page from the server to be rendered */
 
 function sendPOSTRender(page){
   $.ajax({
@@ -80,9 +78,7 @@ $(document).ready(() => {
   });
 
 
-/*
-Populate dropdown with list of possible terms
-*/
+/* Populates dropdown with list of possible terms */
 
   $.ajax({
     url: '/allTerms',
@@ -103,9 +99,7 @@ Populate dropdown with list of possible terms
 });
 
 
-/*
-After selecting a course, the course select dropdown is displayed
-*/
+/* After selecting a course, the course select dropdown is displayed */
 
 function showCourseSelect(){
   if(term != ""){
@@ -118,9 +112,7 @@ function showCourseSelect(){
 }
 
 
-/*
-Add an non-null item to a list
-*/
+/* Adds a non-null item to a list */
 
 function addList(list, item){
   if(item){
@@ -129,9 +121,7 @@ function addList(list, item){
 }
 
 
-/*
-delete an item from a list, given the index of the item
-*/
+/* Deletes an item from a list, given the index of the item */
 
 function deleteItem(list, itemIndex, callback){
   if(itemIndex >= 0){
@@ -141,9 +131,7 @@ function deleteItem(list, itemIndex, callback){
 }
 
 
-/*
-After a user selects or removes a class, update the class table
-*/
+/* After a user selects or removes a class, update the class table */
 
 function updateClassTable(){
   var table = createListTable(classes, 'classes', "updateClassTable");
@@ -151,9 +139,7 @@ function updateClassTable(){
 }
 
 
-/*
-After the user modifies a restriction, update the restriction table
-*/
+/* After the user modifies a restriction, update the restriction table */
 
 function updateRestrictionTable(){
   var table = createListTable(restrictions, 'restrictions', 'updateRestrictionTable');
@@ -175,9 +161,7 @@ function validClass(course) {
 }
 
 
-/*
-Add a class to the class list
-*/
+/* Adds a class to the class list */
 
 function addClass(){
   var className = validClass($('#class-name').val().toUpperCase());
@@ -201,9 +185,7 @@ function titleCase(str) {
 
 
 
-/*
-Allows the user to select a term and get a list of available classes
-*/
+/* Allows the user to select a term and get a list of available classes */
 function selectTerm(){
   var termAttr = $('#term-name');
   if (termAttr.val() != "--Select a Term--") {
@@ -233,9 +215,7 @@ function selectTerm(){
 
 
 
-/*
-Add a resitriction to the restriction table
-*/
+/* Adds a restriction to the restriction table */
 function addRestriction(){
   addList(restrictions, getRestriction());
   updateRestrictionTable();
@@ -244,10 +224,7 @@ function addRestriction(){
 
 
 
-/*
-Create a table given a list of items. This will also add a delete button
-so that items can be removed from the table.
-*/
+/* Creates a table given a list of items. This will also add a delete button so that items can be removed from the table. */
 function createListTable(list, listName, callbackName){
   var table = document.createElement('table');
   table.classList.add('table')
@@ -273,9 +250,7 @@ function createListTable(list, listName, callbackName){
 
 
 
-/*
-Parse restrictions from the restriction table
-*/
+/* Parse restrictions from the restriction table */
 function getRestriction(){
   var type = $('#restriction-type').val();
   output = ""
@@ -291,10 +266,7 @@ function getRestriction(){
 
 
 
-/*
-Populate the restriction table based on the current type of restriction
-selected.
-*/
+/* Populates the restriction table based on the current type of restriction selected. */
 function createRestrictionInput(){
   var type = $("#restriction-type").val();
   $('#restriction-input').empty()
@@ -347,9 +319,7 @@ function convertTimeWithoutAMPM(time){
 
 
 
-/*
-Driver function to start brute forcing possible schedules.
-*/
+/* Driver function to start brute forcing possible schedules. */
 function findSchedules(){
   $("#loader").toggle();
   $("#content").toggle();

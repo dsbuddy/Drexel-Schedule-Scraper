@@ -57,9 +57,7 @@ function convertTime(time) {
 }
 
 
-/*
-Checks whether adding a section to the current schedule will still make it valid
-*/
+/* Checks whether adding a section to the current schedule will still make it valid */
 function isValidSchedule(sectionToAdd, schedule){
   for (otherClass of schedule){
     // console.log(otherClass.number + " " + JSON.otherClass.times);
@@ -72,10 +70,7 @@ function isValidSchedule(sectionToAdd, schedule){
   return true;
 }
 
-/*
-Recursive brute-force to find all possible valid schedules from the given sections
-*/
-
+/* Recursive brute-force to find all possible valid schedules from the given sections */
 function findPossibleSchedules(classes, list, schedule) {
   if (classes.length == 0){
     list.push(schedule);
@@ -90,11 +85,7 @@ function findPossibleSchedules(classes, list, schedule) {
   }
 }
 
-/*
-Filters sections by restrictions, i.e. if a restriction conflicts with a section
-it is purged. Then it populates a global variable with the possible schedules.
-*/
-
+/* Filters sections by restrictions, i.e. if a restriction conflicts with a section it is purged. Then it populates a global variable with the possible schedules. */
 function findAllSchedules(classes, restrictions) {
   var list = [];
   var newClasses = [];
@@ -123,10 +114,7 @@ function findAllSchedules(classes, restrictions) {
   allSchedules = list;
 }
 
-/*
-Filters sections by restrictions, i.e. if a restriction conflicts with a section
-it is purged.
-*/
+/* Filters sections by restrictions, i.e. if a restriction conflicts with a section it is purged. */
 function filterRestrictions(classes, restrictions) {
   let newClasses = []
   for(course of classes){
