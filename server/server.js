@@ -1,54 +1,60 @@
 #! /usr/bin/node
-
+//sets database properly if run localc vs server
 if(process.env.CLEARDB_DATABASE_URL === undefined){
 	require('dotenv').config();
 }
-
+//using express
 var express = require("express");
 
 var app = express();
+//home path
 app.use(express.static("server/"));
+//use port specified
 app.set('port', (process.env.PORT || 8080));
-
+//bodyparser for post requests
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
+//to get files on server
 var fs = require("fs");
 
-
+//connect to mysql database
 var mysql = require("mysql");
-
+//using pools
 let pool = mysql.createPool('mysql://b0805b748391be:694cde6c@us-cdbr-iron-east-01.cleardb.net/heroku_b90810694222ae5?reconnect=true');
-
+//logging purposes
 pool.on('acquire', function (connection) {
   console.log('Connection %d acquired', connection.threadId);
 });
-
+//logging purposes
 pool.on('enqueue', function () {
   console.log('Waiting for available connection slot');
 });
-
+//logging purposes
 pool.on('release', function (connection) {
   console.log('Connection %d released', connection.threadId);
 });
 
+//homepage
 app.get("/",(req,res)=>{
 	res.write(fs.readFileSync(__dirname + "/resources/html/index.html"));
 	res.end();
 });
 
+//homepage
 app.get("/index", (req,res)=>{
 	res.write(fs.readFileSync(__dirname + "/resources/html/index.html"));
 	res.end();
 });
 
-
+//select courses page
 app.get("/select", (req,res)=>{
 	res.write(fs.readFileSync(__dirname + "/resources/html/select.html"));
 	res.end();
 });
 
+//api for getting term information
 app.get('/tms', function(req, res) {
 	if (Object.keys(req.query).length === 0) {
 		res.status(400);
@@ -93,6 +99,7 @@ app.get('/tms', function(req, res) {
 	}
 });
 
+//Used to get resources for dynamic page allocations
 app.post("/render", (req,res)=>{
 	console.log("Entered render with: " + JSON.stringify(req.body));
 	if(req.body.page === undefined){
@@ -118,6 +125,7 @@ app.post("/render", (req,res)=>{
 	res.end();
 });
 
+//gets all the sections for given courses given the course ie CS 275 and the term ie Spring Quarter 18-19
 app.post("/classes", (req, res)=>{
 	console.log("Entered classes with:\n" + JSON.stringify(req.body));
 	let query = "select * from courses where term=" + pool.escape(req.body.term) + "AND (";
@@ -153,6 +161,7 @@ app.post("/classes", (req, res)=>{
 	})
 });
 
+//gets all terms 
 app.get("/allTerms", (req,res)=>{
 	console.log("Entered allTerms");
 	query = "SELECT DISTINCT term FROM courses;";
@@ -168,6 +177,7 @@ app.get("/allTerms", (req,res)=>{
 	});
 });
 
+//gets all the classes offered given the term
 app.get("/allClasses", (req,res)=>{
 	console.log("Entered allClasses");
 	if(req.query.term == undefined){
@@ -189,6 +199,7 @@ app.get("/allClasses", (req,res)=>{
 	});
 });
 
+//used to populate database, currently done manually
 async function pushDataToDatabase(){
 	console.log("Entered pushDataToDatabase");
 	let file = __dirname + "/../scraper/courses.json";
@@ -234,5 +245,6 @@ async function pushDataToDatabase(){
 	console.log("actualRequests: " + actualRequests);
 }
 
+//start application to listen
 app.listen(app.get('port'));
 console.log("Listening on port:" + app.get('port'));
