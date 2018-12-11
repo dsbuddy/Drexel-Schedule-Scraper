@@ -22,7 +22,7 @@ var fs = require("fs");
 //connect to mysql database
 var mysql = require("mysql");
 //using pools
-let pool = mysql.createPool('mysql://b0805b748391be:694cde6c@us-cdbr-iron-east-01.cleardb.net/heroku_b90810694222ae5?reconnect=true');
+let pool = mysql.createPool(process.env.CLEARDB_DATABASE_URL);
 //logging purposes
 pool.on('acquire', function (connection) {
   console.log('Connection %d acquired', connection.threadId);
