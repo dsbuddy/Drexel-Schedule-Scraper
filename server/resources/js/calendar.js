@@ -1,4 +1,8 @@
+/* Global variable that indicates what schedule of allSchedules is to be shown */
 var indx = 0;
+
+
+/* Updates events on calendar */
 function updateEvents(indx) {
 	var events = [];
 	var colors = ['#e6194B', '#f58231', '#800000', '#000075', '#3cb44b', '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#000000', '#9A6324', '#469990'];
@@ -7,12 +11,15 @@ function updateEvents(indx) {
 		var course = courses[j];
 		var times = course.times;
 		var online = false;
+		/* If online class set class to show on Monday */
 		if (times['T'] == 'TBD') {
 			times = {
 				'M': '12:00am-12:00pm'
 			};
 			online = true;
 		}
+
+		/* Create event to display for each day and time */
 		for (day in times) {
 			var start = createDate(day, times[day].split("-")[0]).getTime();
 			var end = createDate(day, times[day].split("-")[1]).getTime();
@@ -23,11 +30,15 @@ function updateEvents(indx) {
 	return events;
 }
 
+
+/* Creates string for popover to display course info */
 function createContent(course) {
 	var res = course.description + ' - <b>Instructor:</b> ' + course.instructor + '<br /><b>Type:</b> ' + course.type + '<br /><b>Section:</b> ' + course.section + '<br /><b>CRN:</b> ' + course.crn;
 	return res;
 }
 
+
+/* Creates JSON object of course information */
 function createEvent(title, start, end, color, content, online) {
 	if (online) {
 		return {
@@ -50,6 +61,7 @@ function createEvent(title, start, end, color, content, online) {
 }
 
 
+/* Creates date for calendar to display properly */
 function createDate(day, time) {
 	var event = new Date();
 	time = convertTime(time);
@@ -80,6 +92,8 @@ function createDate(day, time) {
 	return event;
 }
 
+
+/* Converts time from normal format HH:MM AM/PM to military time HH:MM */
 function convertTime(time) {
 	var hours = Number(time.match(/^(\d+)/)[1]);
     var minutes = Number(time.match(/:(\d+)/)[1]);
@@ -98,10 +112,14 @@ function convertTime(time) {
     return (sHours + sMinutes);
 }
 
+
+/* Updates title (div with id scheduleNum) depending upon indx */
 function updateTitle(indx) {
 	$("#scheduleNum").html("<center><h1>Schedule " + String(indx+1) + " / " + String(allSchedules.length) + "</h1></center>");
 }
 
+
+/* On click of "Get CRNs" button modifies datalist to show and list all CRNs */
 function getCRN() {
 	$("#crnArea").val("");
 	$("#crnArea").toggle();
@@ -119,26 +137,28 @@ function getCRN() {
 }
 
 
-
-
 $(document).ready(function() {
 	$("#content").toggle();
 	indx = 0;
+	
 	/* Change to next schedule */
 	$('.next').click(function() {
 		if (indx < (allSchedules.length - 1)) {
 			indx++;
 			$("#crnArea").hide();
+			/* Reset and update events and title in calendar */
 			$('#calendar').fullCalendar('removeEvents');
 			$('#calendar').fullCalendar('addEventSource', updateEvents(indx));
 			updateTitle(indx);
 		}
 	});
+	
 	/* Change to previous schedule */
 	$('.previous').click(function() {
 		if (indx > 0) {
 			indx--;
 			$("#crnArea").hide();
+			/* Reset and update events and title in calendar */
 			$('#calendar').fullCalendar('removeEvents');
 			$('#calendar').fullCalendar('addEventSource', updateEvents(indx));
 			updateTitle(indx);
@@ -174,6 +194,7 @@ $(document).ready(function() {
 		}
 	});
 
+	/* Copies crn content when clicked */
 	$("#crnArea").click(function(){
 	    $("#crnArea").select();
 	    document.execCommand('copy');

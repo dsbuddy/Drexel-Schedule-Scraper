@@ -7,6 +7,29 @@ var defaultContent = "";
 
 
 
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
+
 function sendPOSTRender(page){
   $.ajax({
     type: "POST",
@@ -27,7 +50,7 @@ function sendPOSTRender(page){
 
 
 $(document).ready(() => {
-
+  /* When user types a term and clicks enter, function is automatically called */
   $("#term-name").keydown(function(event) {
     if (event.keyCode == 13) {
       event.preventDefault();
@@ -35,6 +58,7 @@ $(document).ready(() => {
     }
   });
 
+  /* When user types a class and clicks enter, function is automatically called */
   $("#class-name").keydown(function(event) {
     if (event.keyCode == 13) {
       event.preventDefault();
@@ -42,6 +66,7 @@ $(document).ready(() => {
     }
   });
 
+  /* When user chooses a restriction and clicks enter, function is automatically called */
   $("#restriction-input").keydown(function(event) {
     if (event.keyCode == 13) {
       event.preventDefault();
@@ -49,6 +74,7 @@ $(document).ready(() => {
     }
   });
 
+  /* When user types a second time and clicks enter, function is automatically called */
   $("#time1").keydown(function(event) {
     if (event.keyCode == 13) {
       event.preventDefault();
@@ -56,6 +82,7 @@ $(document).ready(() => {
     }
   });
 
+  /* When user types a second time and clicks enter, function is automatically called */
   $("#time2").keydown(function(event) {
     if (event.keyCode == 13) {
       event.preventDefault();
@@ -63,12 +90,37 @@ $(document).ready(() => {
     }
   });
 
+  /* When user chooses a day and clicks enter, function is automatically called */
   $("#day-select").keydown(function(event) {
     if (event.keyCode == 13) {
       event.preventDefault();
       addRestriction();
     }
   });
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 
   $.ajax({
     url: '/allTerms',
@@ -88,6 +140,30 @@ $(document).ready(() => {
   defaultContent = $("#content").html();
 });
 
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
+
 function showCourseSelect(){
   if(term != ""){
     $("#content").html(defaultContent);
@@ -98,11 +174,59 @@ function showCourseSelect(){
   }
 }
 
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
+
 function addList(list, item){
   if(item){
     list.push(item);
   }
 }
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 
 function deleteItem(list, itemIndex, callback){
   if(itemIndex >= 0){
@@ -111,16 +235,66 @@ function deleteItem(list, itemIndex, callback){
   callback();
 }
 
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
+
 function updateClassTable(){
   var table = createListTable(classes, 'classes', "updateClassTable");
   $('#class-table').html(table);
 }
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 
 function updateRestrictionTable(){
   var table = createListTable(restrictions, 'restrictions', 'updateRestrictionTable');
   $('#restriction-table').html(table);
 }
 
+
+/* Checks if class user type is a valid class from the database */
 function validClass(course) {
   course = course.replace(/ /g,'');
   var datalist = $("#courseList");
@@ -133,10 +307,34 @@ function validClass(course) {
   return false;
 }
 
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
+
 function addClass(){
-  var temp = validClass($('#class-name').val().toUpperCase());
-  if (temp != false) {
-    addList(classes, temp);
+  var className = validClass($('#class-name').val().toUpperCase());
+  if (className != false) {
+    addList(classes, className);
     $('#class-name').val('');
     updateClassTable();
   } else {
@@ -144,6 +342,7 @@ function addClass(){
   }
 }
 
+/* Converts string to title case (ex: the boy went to the market -> The Boy Went To The Market) */
 function titleCase(str) {
   str = str.toLowerCase().split(' ');
   for (var i = 0; i < str.length; i++) {
@@ -152,6 +351,30 @@ function titleCase(str) {
   return str.join(' ');
 }
 
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 function selectTerm(){
   var termAttr = $('#term-name');
   if (termAttr.val() != "--Select a Term--") {
@@ -179,12 +402,60 @@ function selectTerm(){
   }
 }
 
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 function addRestriction(){
   addList(restrictions, getRestriction());
   updateRestrictionTable();
   defaultContent = $("#content").html();
 }
 
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 function createListTable(list, listName, callbackName){
   var table = document.createElement('table');
   table.classList.add('table')
@@ -208,6 +479,30 @@ function createListTable(list, listName, callbackName){
   return table;
 }
 
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 function getRestriction(){
   var type = $('#restriction-type').val();
   output = ""
@@ -221,6 +516,30 @@ function getRestriction(){
   return output;
 }
 
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 function createRestrictionInput(){
   var type = $("#restriction-type").val();
   $('#restriction-input').empty()
@@ -265,11 +584,36 @@ function createRestrictionInput(){
 
 }
 
+/* Converts time from HH:MM AM/PM to HHMM */
 function convertTimeWithoutAMPM(time){
   times = time.split(":");
   return parseInt(times[0]) * 60 + parseInt(times[1]);
 }
 
+
+
+/*
+
+  _   _ _      _         _____                                     _   
+ | \ | (_)    | |       / ____|                                   | |  
+ |  \| |_  ___| | __   | |     ___  _ __ ___  _ __ ___   ___ _ __ | |_ 
+ | . ` | |/ __| |/ /   | |    / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \| __|
+ | |\  | | (__|   <    | |___| (_) | | | | | | | | | | |  __/ | | | |_ 
+ |_| \_|_|\___|_|\_\    \_____\___/|_| |_| |_|_| |_| |_|\___|_| |_|\__|
+
+
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                                  | |                                                              
+                               __ | |  __                                                          
+                               \ \| | / /                                                          
+                                \ \_|/ /                                                           
+                                 \ \/ /                                                            
+                                  \  /                                                             
+                                   \/                                                              
+                                                
+*/
 function findSchedules(){
   $("#loader").toggle();
   $("#content").toggle();
