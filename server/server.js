@@ -54,6 +54,12 @@ app.get("/select", (req,res)=>{
 	res.end();
 });
 
+//select courses page
+app.get("/table", (req,res)=>{
+	res.write(fs.readFileSync(__dirname + "/resources/html/table.html"));
+	res.end();
+});
+
 //api for getting term information
 app.get('/tms', function(req, res) {
 	if (Object.keys(req.query).length === 0) {
@@ -118,6 +124,9 @@ app.post("/render", (req,res)=>{
 		case("calendar"):
 			res.write(fs.readFileSync(__dirname + "/resources/html/calendar.html"));
 			break;
+		case("table"):
+			res.write(fs.readFileSync(__dirname + "/resources/html/table.html"));
+			break;
 		default:
 			res.status(200);
 			res.write("Could not find page");
@@ -166,6 +175,28 @@ app.get("/allTerms", (req,res)=>{
 	console.log("Entered allTerms");
 	query = "SELECT DISTINCT term FROM courses;";
 	pool.query(query, (err,rows, field)=>{
+		if(err){
+			res.status(200);
+			res.write("Error with query");
+			res.end();
+			return;
+		}
+		res.json(rows);
+		res.end();
+	});
+});
+
+//gets all instructors 
+app.get("/allInstructors", (req,res)=>{
+	console.log("Entered allInstructors");
+	if(req.query.term == undefined){
+		res.status(200);
+		res.write("Error with query");
+		res.end();
+		return;	
+	}
+	query = 'SELECT DISTINCT instructor as ID from courses where term=' + pool.escape(req.query.term) + ' ORDER BY ID';
+	pool.query(query,(err,rows,fields)=>{
 		if(err){
 			res.status(200);
 			res.write("Error with query");
