@@ -24,7 +24,7 @@ const getTerms = new Promise((resolve, reject)=>{
 			return;
 		});
 		console.log("Success in getTerms()");
-		resolve(termList.slice(2,3));//0,4));//first 4 as they are the ones we care about ie current year
+		resolve(termList.slice(0,1));//0,4));//first 4 as they are the ones we care about ie current year
 	});
 });
 
@@ -144,7 +144,10 @@ async function getCourses(termList){
 	for (let i=0; i<allLinks.length; i++) {
 		console.log("Getting info from " + allLinks[i]);
 		let coursePageRes = await parseCoursePage(allLinks[i]);
-		allCourses.push(coursePageRes);
+		for (course in coursePageRes) {
+			allCourses.push(coursePageRes[course]);
+		}
+		// allCourses.push(coursePageRes);
 	}
 
 	console.log("Resolving all courses");
@@ -197,86 +200,132 @@ function getCoursesFromLink(link){
 
 function parseCoursePage(link) {
 	return new Promise((resolve,reject) =>{
-	    let listLinks = [];
+	    // let listLinks = [];
+		let allCourses = [];
 		request(link, function (error, response, html) {
 			if (!error && response.statusCode == 200) {
 			    var $ = cheerio.load(html);
+			    
+			    // Details is used to parse course from array to JSON
+			    var details = [];
 
-			    console.log("---------------------\n");
-
-
+			    // Gets CRN, Subject, Course Number, Section, Credits, Title, Campus, Instructor, Type, Method, Max Enroll, Enroll, Section Comments, Textbook
 			     $('table[bgcolor="#cccccc"]').find('tr > td').each(function(i, elem) {
-				    var show = $(this).html();
-				    console.log(i + ": " + show);
-
 				    switch (i) {
 					  case 1:
 					  // CRN
-					    console.log($(this).html());
+					  	details.splice(0,details.length);
+					  	details.push($(this).html());
 					    break;
 					  case 3:
 					  // Subject
-					  	console.log($(this).html());
+					  	details.push($(this).html());
 					  	break;
 					  case 5:
 					  // Course Number
-					  	console.log($(this).html());
+					  	details.push($(this).html());
 					  	break;
 					  case 7:
 					  // Section
-					  	console.log($(this).html());
+					  	details.push($(this).html());
 					  	break;
 					  case 9:
 					  // Credits
-					  	console.log($(this).html().trim());
+					  	details.push(($(this).html().trim()));
 					  	break;
 					  case 11:
 					  // Course Name
-					  	console.log($(this).html());
+					  	details.push(($(this).html()));
 					  	break;
 					  case 13:
 					  // Campus
-					  	console.log($(this).html());
+					  	details.push(($(this).html()));
 					  	break;
 					  case 15:
 					  // Instructors
-					  	console.log($(this).html());
+					  	details.push(($(this).html()));
 					  	break;
 					  case 17:
 					  // Method
-					  	console.log($(this).html());
+					  	details.push(($(this).html()));
 					  	break;
 					  case 19:
 					  // Type
-					  	console.log($(this).html());
+					  	details.push(($(this).html()));
 					  	break;
 					  case 21:
 					  // Max Enroll
-					  	console.log($(this).html());
+					  	details.push(($(this).html()));
 					  	break;
 					  case 23:
 					  // Current Enroll
-					  	console.log($(this).html());
+					  	details.push(($(this).html()));
 					  	break;
 					  case 26:
 					  // Section comments
-					  	console.log($(this).html());
+					  	details.push(($(this).html()));
 					  	break;
 					  case 28:
 					  // Textbook
-					  	console.log($(this).find('a').attr('href'));
+					  	details.push(($(this).find('a').attr('href')));
 					  	break;
 					}
-
 				 });
 
 
-						// console.log(listLinks);
-						// console.dir(listLinks);
-			    console.log("\n---------------------");
+				 // timeStr is used for parsing time to expected format
+				 var timeStr = "";
+
+			    // Gets Times, Days, Building, Room
+				 $('tr[class="even"]').find('td').each(function(i, elem) {
+				    switch (i) {
+					  case 2:
+					  // Times
+					  	timeStr = ""
+					  	timeStr += $(this).html();
+					    // console.log($(this).html());
+					    break;
+					  case 3:
+					  // Days
+					  	var temp = $(this).html() + "\n";
+					  	timeStr = timeStr.replace(/^/, temp);
+					  	// console.log($(this).html());
+					  	// console.log(timeStr);
+					  	details.push((extractTime(timeStr)));
+					  	break;
+					  case 4:
+					  // Building
+					  	details.push(($(this).html()));
+					  	break;
+					  case 5:
+					  // Room
+					  	details.push(($(this).html()));
+					  	break;
+					  }
+				});
+
+				// Gets Description
+				 $('table[class="descPanel"]').find('div').each(function(i, elem) {
+				    switch (i) {
+					  case 0:
+					  // CourseDescription
+					    details.push(($(this).html()));
+					    
+					    // finalCourse is result of JSON format of class
+					    var finalCourse = makeCourse(details);
+					    // console.log(finalCourse);
+
+					    // Pushes course to allCourses array
+					    allCourses.push(finalCourse);
+
+					    // Clears details array for next course
+					    details.splice(0,details.length);
+					    break;
+					  }
+				});
 
 			}
-			resolve(listLinks);
+			resolve(allCourses);
 		});
 	});
 
@@ -284,20 +333,43 @@ function parseCoursePage(link) {
 
 
 function makeCourse(details) {
-	if(details.length != 9){
+	if(details.length != 18){
 		return undefined;
 	}
+
 	return {
-		"Subject" : details[0],
-		"Number" : details[1],
-		"Type": details[2],
-		"Method" : details[3],
-		"Section" : details[4],
-		"CRN" : details[5],
-		"Description" : details[6],
-		"Times" : extractTime(details[7]),
-		"Instructor" : details[8]
+		"Subject" : details[1],
+		"Number" : details[2],
+		"Type" : details[8],
+		"Method" : details[9],
+		"Section" : details[3],
+		"CRN" : details[0],
+		"Title" : details[5],
+		"Times" : details[14],
+		"Instructor" : details[7],
+		"Building" : details[15],
+		"Room" : details[16],
+		"Campus" : details[6],
+		"Credits" : details[4],
+		"Enroll" : details[11],
+		"Max Enroll" : details[10],
+		"Section Comments" : details[12],
+		"Textbook" : details[13],
+		"Description" : details[17]
 	}
+
+	// Old json
+	// return {
+	// 	"Subject" : details[0],
+	// 	"Number" : details[1],
+	// 	"Type": details[2],
+	// 	"Method" : details[3],
+	// 	"Section" : details[4],
+	// 	"CRN" : details[5],
+	// 	"Description" : details[6],
+	// 	"Times" : extractTime(details[7]),
+	// 	"Instructor" : details[8]
+	// }
 }
 
 
