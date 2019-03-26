@@ -71,7 +71,7 @@ function combineColleges(termList, colleges){
 	for( let i=0; i<termList.length; i++){
 		termList[i].colleges=colleges[i];
 	}
-	console.log("Succes in getColleges");
+	console.log("Success in getColleges");
 	return termList;
 }
 
@@ -119,7 +119,7 @@ function combineSubjects(termList, subjects) {
 			subjectCount++;
 		}
 	}
-	console.log("Succes in getSubjects");
+	console.log("Success in getSubjects");
 	return termList;
 }
 
@@ -132,23 +132,57 @@ async function getCourses(termList){
 			for(let k=0; k<termList[i].colleges[j].subjects.length; k++){
 				let link = termList[i].colleges[j].subjects[k].link;
 				console.log("Getting courses from Link:\n" + link);
+
+				let linkCourses = [];
+
 				let temp = await getCoursesFromLink(link);
-				// allCourses.push(temp);
+				console.log(temp);
+
 				for (let l=0; l<temp.length; l++) {
-					allLinks.push(temp[l]);
+					console.log("Parsing: " + temp[l]);
+					let courseFinal = await parseCoursePage(temp[l]);
+					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					console.log(courseFinal);
+					for (course in courseFinal) {
+						allCourses.push(courseFinal[course]);
+					}
+					// allCourses.push(courseFinal);
 				}
+
+				// allCourses.push(linkCourses);
+				
+
+
+
+				// allCourses.push(temp);
+				// for (let l=0; l<temp.length; l++) {
+				// 	allLinks.push(temp[l]);
+
+				// 	// New below
+				// 	let coursePageRes = await parseCoursePage(temp[l]);
+				// 	allCourses.push(coursePageRes[0]);
+				// 	console.log('---------------------');
+				// 	console.log(coursePageRes[0]);
+				// 	console.log('---------------------');
+
+				// 	// New above
+				// }
 			}
 		}
 	}
-	console.dir(allLinks);
-	for (let i=0; i<allLinks.length; i++) {
-		console.log("Getting info from " + allLinks[i]);
-		let coursePageRes = await parseCoursePage(allLinks[i]);
-		for (course in coursePageRes) {
-			allCourses.push(coursePageRes[course]);
-		}
-		// allCourses.push(coursePageRes);
-	}
+
+	console.log(allCourses.length);
+
+	// // Add Below
+	// console.dir(allLinks);
+	// for (let i=0; i<allLinks.length; i++) {
+	// 	console.log("Getting info from " + allLinks[i]);
+	// 	let coursePageRes = await parseCoursePage(allLinks[i]);
+	// 	// for (course in coursePageRes) {
+	// 		// allCourses.push(coursePageRes[course]);
+	// 	// }
+	// 	allCourses.push(coursePageRes);
+	// }
 
 	console.log("Resolving all courses");
 	return combineCourses(termList,allCourses);
@@ -158,7 +192,6 @@ async function getCourses(termList){
 function getCoursesFromLink(link){
 	return new Promise((resolve,reject) =>{
 		request(link, function (error, response, html) {
-			let allCourses = [];
 			let allLinks = [];
 			if (!error && response.statusCode == 200) {
 			    var $ = cheerio.load(html);
@@ -202,6 +235,7 @@ function parseCoursePage(link) {
 	return new Promise((resolve,reject) =>{
 	    // let listLinks = [];
 		let allCourses = [];
+		// var finalCourse;
 		request(link, function (error, response, html) {
 			if (!error && response.statusCode == 200) {
 			    var $ = cheerio.load(html);
@@ -312,8 +346,8 @@ function parseCoursePage(link) {
 					    details.push(($(this).html()));
 					    
 					    // finalCourse is result of JSON format of class
-					    var finalCourse = makeCourse(details);
-					    // console.log(finalCourse);
+					    finalCourse = makeCourse(details);
+					    console.log(finalCourse);
 
 					    // Pushes course to allCourses array
 					    allCourses.push(finalCourse);
@@ -352,8 +386,8 @@ function makeCourse(details) {
 		"Campus" : details[6],
 		"Credits" : details[4],
 		"Enroll" : details[11],
-		"Max Enroll" : details[10],
-		"Section Comments" : details[12],
+		"Max_Enroll" : details[10],
+		"Section_Comments" : details[12],
 		"Textbook" : details[13],
 		"Description" : details[17]
 	}
@@ -399,21 +433,49 @@ function extractTime(lines) {
 
 function combineCourses(termList, allCourses){
 	console.log("Entered combineCourses()");
+
+	// console.log(allCourses.length);
+	saveJSON2(allCourses);
+	// console.log(allCourses);
+
 	let coursesCount = 0;
-	for (let i=0; i<termList.length; i++) {
-		for(let j=0; j<termList[i].colleges.length; j++){
-			for(let k=0; k<termList[i].colleges[j].subjects.length; k++){
-				termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
-				coursesCount++;
+	for (course in allCourses) {
+		for (let i=0; i<termList.length; i++) {
+			for (let j=0; j<termList[i].colleges.length; j++) {
+				for (let k=0; k<termList[i].colleges[j].subjects.length; k++) {
+					console.log(i + ", " + j + ", " + k);
+					termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
+					coursesCount++;
+				}
 			}
 		}
 	}
+	// let coursesCount = 0;
+	// for (let i=0; i<termList.length; i++) {
+	// 	for(let j=0; j<termList[i].colleges.length; j++){
+	// 		for(let k=0; k<termList[i].colleges[j].subjects.length; k++){
+	// 			termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
+	// 			coursesCount++;
+	// 		}
+	// 	}
+	// }
+
+	console.log(coursesCount);
 	console.log("Success in getCourses");
 	return termList;
 }
 
 let fs = require('fs');
 
+function saveJSON2(termList){
+	let data = JSON.stringify(termList);
+	//should be called from server which has it's home dir in /server/
+	fs.writeFile('../scraper/type.json', data, function(err, data){
+	    if (err) console.log(err);
+	    console.log("Successfully Written to File.");
+	});
+
+}
 
 function saveJSON(termList){
 	let data = JSON.stringify(termList);
