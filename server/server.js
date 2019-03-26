@@ -66,7 +66,7 @@ app.get('/tms', function(req, res) {
 		res.status(400);
 		res.send("No parameters provided");
 	} else {
-		var query = "SELECT * FROM courses WHERE";
+		var query = "SELECT * FROM updated_courses WHERE";
 		var params = [];
 		console.log("TMS Get Request\nParameters Sent: " + JSON.stringify(req.query));
 		if(req.query.term !== undefined) params.push(["term", pool.escape(req.query.term)]);
@@ -82,7 +82,7 @@ app.get('/tms', function(req, res) {
 		if(req.query.instructor !== undefined) params.push(["instructor", pool.escape(req.query.instructor)]);
 
 		for (var i=0; i<params.length; i++) {
-			if (query.length === 27) {
+			if (query.length === 35) {
 				query += " " + params[i][0] + "=" + params[i][1];
 			} else {
 				query += " AND " + params[i][0] + "=" + params[i][1];
@@ -94,7 +94,7 @@ app.get('/tms', function(req, res) {
 		pool.query(query, (err,rows, field)=>{
 			if(err){
 				res.status(300);
-				res.write("Error with query");
+				res.write("Error with query" + err);
 				res.end();
 				return;
 			}
@@ -137,7 +137,7 @@ app.post("/render", (req,res)=>{
 //gets all the sections for given courses given the course ie CS 275 and the term ie Spring Quarter 18-19
 app.post("/classes", (req, res)=>{
 	console.log("Entered classes with:\n" + JSON.stringify(req.body));
-	let query = "select * from courses where term=" + pool.escape(req.body.term) + "AND (";
+	let query = "select * from updated_courses where term=" + pool.escape(req.body.term) + "AND (";
 	let coursesRes = [];
 	let map = {};
 	let counter = 0;
@@ -173,7 +173,7 @@ app.post("/classes", (req, res)=>{
 //gets all terms 
 app.get("/allTerms", (req,res)=>{
 	console.log("Entered allTerms");
-	query = "SELECT DISTINCT term FROM courses;";
+	query = "SELECT DISTINCT term FROM updated_courses;";
 	pool.query(query, (err,rows, field)=>{
 		if(err){
 			res.status(200);
@@ -195,7 +195,7 @@ app.get("/allInstructors", (req,res)=>{
 		res.end();
 		return;	
 	}
-	query = 'SELECT DISTINCT instructor as ID from courses where term=' + pool.escape(req.query.term) + ' ORDER BY ID';
+	query = 'SELECT DISTINCT instructor as ID from updated_courses where term=' + pool.escape(req.query.term) + ' ORDER BY ID';
 	pool.query(query,(err,rows,fields)=>{
 		if(err){
 			res.status(200);
@@ -217,7 +217,7 @@ app.get("/allClasses", (req,res)=>{
 		res.end();
 		return;	
 	}
-	query = 'SELECT DISTINCT CONCAT(subject, " ", number) as ID from courses where term=' + pool.escape(req.query.term) + ' ORDER BY ID';
+	query = 'SELECT DISTINCT CONCAT(subject, " ", number) as ID from updated_courses where term=' + pool.escape(req.query.term) + ' ORDER BY ID';
 	pool.query(query,(err,rows,fields)=>{
 		if(err){
 			res.status(200);
@@ -228,6 +228,12 @@ app.get("/allClasses", (req,res)=>{
 		res.json(rows);
 		res.end();
 	});
+});
+
+app.get("/pushDatabase",(req,res)=>{
+	console.log("Calling pushDataToDatabase");
+	pushDataToDatabase();
+	console.log("Finished pushing to database");
 });
 
 //used to populate database, currently done manually
@@ -244,7 +250,7 @@ async function pushDataToDatabase(){
 	console.log("File read");
 	for(term in allCourses){
 		for(college in allCourses[term].colleges){
-			let query = "INSERT INTO courses (term, college, subject, number, type, method, section, crn, description, times, instructor) VALUES (";
+			let query = "INSERT INTO updated_courses (term, college, subject, number, type, method, section, crn, title, times, instructor, building, room, campus, credits, enroll, max_enroll, section_comments, textbook, description) VALUES (";
 			for(subject in allCourses[term].colleges[college].subjects){
 				for(course in allCourses[term].colleges[college].subjects[subject].courses){
 					let item = allCourses[term].colleges[college].subjects[subject].courses[course];
@@ -256,9 +262,18 @@ async function pushDataToDatabase(){
 					query += ", " + pool.escape(item.Method);
 					query += ", " + pool.escape(item.Section);
 					query += ", " + pool.escape(item.CRN);
-					query += ", " + pool.escape(item.Description);
+					query += ", " + pool.escape(item.Title);
 					query += ", " + pool.escape(JSON.stringify(item.Times));
 					query += ", " + pool.escape(item.Instructor);
+					query += ", " + pool.escape(item.Building);
+					query += ", " + pool.escape(item.Room);
+					query += ", " + pool.escape(item.Campus);
+					query += ", " + pool.escape(item.Credits);
+					query += ", " + pool.escape(item.Enroll);
+					query += ", " + pool.escape(item.Max_Enroll);
+					query += ", " + pool.escape(item.Section_Comments);
+					query += ", " + pool.escape(item.Textbook);
+					query += ", " + pool.escape(item.Description);
 					query += "),\n(";
 					totalRequests++;
 				}
