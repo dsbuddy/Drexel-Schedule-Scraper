@@ -236,6 +236,7 @@ app.get("/allClasses", (req,res)=>{
 	});
 });
 
+
 app.get("/runScraper", (req,res)=>{
 	console.log("Calling runScraper");
 
@@ -261,12 +262,14 @@ app.get("/runScraper", (req,res)=>{
 
 
 	console.log("Done scraper");
-})
+	res.end();
+});
 
 app.get("/pushDatabase",(req,res)=>{
 	console.log("Calling pushDataToDatabase");
 	pushDataToDatabase();
 	console.log("Finished pushing to database");
+	res.end();
 });
 
 //used to populate database, currently done manually
