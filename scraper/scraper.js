@@ -55,11 +55,7 @@ const getColleges = (list) => {
 					let colleges = [];
 					$('#sideLeft a').each(function (i, elem){
 						// CCI ONLY TO TEST
-						if (i == 5) {
 						colleges.push({"name" : $(elem).text() , "link": "https://termmasterschedule.drexel.edu"+$(elem).attr('href')});
-
-						}
-
 					});
 					resolve(colleges);
 				})
