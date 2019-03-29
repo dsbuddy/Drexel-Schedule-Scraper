@@ -2,6 +2,12 @@
 
 let request = require('request');
 let cheerio = require('cheerio');
+let fs = require('fs');
+
+function log(msg){
+	console.log(JSON.stringify(msg));
+}
+
 
 const getTerms = new Promise((resolve, reject)=>{
 	console.log("Starting getTerms()");
@@ -30,10 +36,7 @@ const getTerms = new Promise((resolve, reject)=>{
 
 
 
-function log(msg){
-	console.log(JSON.stringify(msg));
-}
-
+/* Scrape Colleges */
 const getColleges = (list) => {
 	return new Promise((resolve, reject)=>{
 		console.log("Starting getColleges()");
@@ -65,8 +68,6 @@ const getColleges = (list) => {
 		Promise.all(promiseArray).then((allColleges)=>{resolve(combineColleges(termList,allColleges))},reject);
 	});
 }
-
-
 function combineColleges(termList, colleges){
 	for( let i=0; i<termList.length; i++){
 		termList[i].colleges=colleges[i];
@@ -76,6 +77,9 @@ function combineColleges(termList, colleges){
 }
 
 
+
+
+/* Scrape Subjects */
 const getSubjects = (list)=>{
 	let termList = list;
 	return new Promise((resolve, reject)=>{
@@ -110,7 +114,6 @@ const getSubjects = (list)=>{
 		Promise.all(promiseArray).then((allSubjects)=>{resolve(combineSubjects(termList,allSubjects))},reject);
 	});
 }
-
 function combineSubjects(termList, subjects) {
 	let subjectCount = 0;
 	for( let i=0; i<termList.length; i++){
@@ -123,6 +126,10 @@ function combineSubjects(termList, subjects) {
 	return termList;
 }
 
+
+
+
+/* Scrape Courses */
 async function getCourses(termList){
 	console.log("Starting getCourses");
 	let allCourses = [];
@@ -132,8 +139,6 @@ async function getCourses(termList){
 			for(let k=0; k<termList[i].colleges[j].subjects.length; k++){
 				let link = termList[i].colleges[j].subjects[k].link;
 				console.log("Getting courses from Link:\n" + link);
-
-				let linkCourses = [];
 
 				let temp = await getCoursesFromLink(link);
 				console.log(temp);
@@ -146,49 +151,23 @@ async function getCourses(termList){
 					for (course in courseFinal) {
 						allCourses.push(courseFinal[course]);
 					}
-					// allCourses.push(courseFinal);
 				}
-
-				// allCourses.push(linkCourses);
-				
-
-
-
-				// allCourses.push(temp);
-				// for (let l=0; l<temp.length; l++) {
-				// 	allLinks.push(temp[l]);
-
-				// 	// New below
-				// 	let coursePageRes = await parseCoursePage(temp[l]);
-				// 	allCourses.push(coursePageRes[0]);
-				// 	console.log('---------------------');
-				// 	console.log(coursePageRes[0]);
-				// 	console.log('---------------------');
-
-				// 	// New above
-				// }
+				// termList[i].colleges[j].subjects[k].courseLinks = temp;
+				termList[i].colleges[j].subjects[k].courseLinks = [];
+				for (link in temp) {
+					let temp3 = temp[link];
+					let temp2 = {"courseLink":temp3}
+					termList[i].colleges[j].subjects[k].courseLinks.push(temp2);
+				}
 			}
 		}
 	}
 
 	console.log(allCourses.length);
 
-	// // Add Below
-	// console.dir(allLinks);
-	// for (let i=0; i<allLinks.length; i++) {
-	// 	console.log("Getting info from " + allLinks[i]);
-	// 	let coursePageRes = await parseCoursePage(allLinks[i]);
-	// 	// for (course in coursePageRes) {
-	// 		// allCourses.push(coursePageRes[course]);
-	// 	// }
-	// 	allCourses.push(coursePageRes);
-	// }
-
 	console.log("Resolving all courses");
 	return combineCourses(termList,allCourses);
 }
-
-
 function getCoursesFromLink(link){
 	return new Promise((resolve,reject) =>{
 		request(link, function (error, response, html) {
@@ -230,7 +209,6 @@ function getCoursesFromLink(link){
 		});
 	});
 }
-
 function parseCoursePage(link) {
 	return new Promise((resolve,reject) =>{
 	    // let listLinks = [];
@@ -246,61 +224,47 @@ function parseCoursePage(link) {
 			    // Gets CRN, Subject, Course Number, Section, Credits, Title, Campus, Instructor, Type, Method, Max Enroll, Enroll, Section Comments, Textbook
 			     $('table[bgcolor="#cccccc"]').find('tr > td').each(function(i, elem) {
 				    switch (i) {
-					  case 1:
-					  // CRN
+					  case 1: // CRN
 					  	details.splice(0,details.length);
 					  	details.push($(this).html());
 					    break;
-					  case 3:
-					  // Subject
+					  case 3: // Subject
 					  	details.push($(this).html());
 					  	break;
-					  case 5:
-					  // Course Number
+					  case 5: // Course Number
 					  	details.push($(this).html());
 					  	break;
-					  case 7:
-					  // Section
+					  case 7: // Section
 					  	details.push($(this).html());
 					  	break;
-					  case 9:
-					  // Credits
+					  case 9: // Credits
 					  	details.push(($(this).html().trim()));
 					  	break;
-					  case 11:
-					  // Course Name
+					  case 11: // Course Name
 					  	details.push(($(this).html()));
 					  	break;
-					  case 13:
-					  // Campus
+					  case 13: // Campus
 					  	details.push(($(this).html()));
 					  	break;
-					  case 15:
-					  // Instructors
+					  case 15: // Instructors
 					  	details.push(($(this).html()));
 					  	break;
-					  case 17:
-					  // Method
+					  case 17: // Method
 					  	details.push(($(this).html()));
 					  	break;
-					  case 19:
-					  // Type
+					  case 19: // Type
 					  	details.push(($(this).html()));
 					  	break;
-					  case 21:
-					  // Max Enroll
+					  case 21: // Max Enroll
 					  	details.push(($(this).html()));
 					  	break;
-					  case 23:
-					  // Current Enroll
+					  case 23: // Current Enroll
 					  	details.push(($(this).html()));
 					  	break;
-					  case 26:
-					  // Section comments
+					  case 26: // Section comments
 					  	details.push(($(this).html()));
 					  	break;
-					  case 28:
-					  // Textbook
+					  case 28: // Textbook
 					  	details.push(($(this).find('a').attr('href')));
 					  	break;
 					}
@@ -313,26 +277,19 @@ function parseCoursePage(link) {
 			    // Gets Times, Days, Building, Room
 				 $('tr[class="even"]').find('td').each(function(i, elem) {
 				    switch (i) {
-					  case 2:
-					  // Times
+					  case 2: // Times
 					  	timeStr = ""
 					  	timeStr += $(this).html();
-					    // console.log($(this).html());
 					    break;
-					  case 3:
-					  // Days
+					  case 3: // Days
 					  	var temp = $(this).html() + "\n";
 					  	timeStr = timeStr.replace(/^/, temp);
-					  	// console.log($(this).html());
-					  	// console.log(timeStr);
 					  	details.push((extractTime(timeStr)));
 					  	break;
-					  case 4:
-					  // Building
+					  case 4: // Building
 					  	details.push(($(this).html()));
 					  	break;
-					  case 5:
-					  // Room
+					  case 5: // Room
 					  	details.push(($(this).html()));
 					  	break;
 					  }
@@ -341,8 +298,7 @@ function parseCoursePage(link) {
 				// Gets Description
 				 $('table[class="descPanel"]').find('div').each(function(i, elem) {
 				    switch (i) {
-					  case 0:
-					  // CourseDescription
+					  case 0: // CourseDescription
 					    details.push(($(this).html()));
 					    
 					    // finalCourse is result of JSON format of class
@@ -362,10 +318,47 @@ function parseCoursePage(link) {
 			resolve(allCourses);
 		});
 	});
-
 }
 
 
+
+
+
+
+
+function combineCourses(termList, allCourses){
+	console.log("Entered combineCourses()");
+	console.log("\n\n\n\n\n\n\n\n\n" + JSON.stringify(allCourses));
+
+	let coursesCount = 0;
+	for (course in allCourses) {
+		for (let i=0; i<termList.length; i++) {
+			for (let j=0; j<termList[i].colleges.length; j++) {
+				for (let k=0; k<termList[i].colleges[j].subjects.length; k++) {
+					for (let l=0; l<termList[i].colleges[j].subjects[k].courseLinks.length; l++) {
+						// console.log("\n\n\n\n" + JSON.stringify(allCourses[coursesCount]) + "\n\n\n\n");
+						// termList[i].colleges[j].subjects[k][l] = allCourses[0];
+						// termList[i].colleges[j].subjects[k].courseLinks[l].courses = allCourses[0];
+
+						if (coursesCount < allCourses.length) {
+							termList[i].colleges[j].subjects[k].courseLinks[l].courses = allCourses[coursesCount];
+						}
+						coursesCount++;
+					}
+				}
+			}
+		}
+	}
+
+	console.log(allCourses.length)
+	console.log(coursesCount);
+	console.log("Success in getCourses()");
+	return termList;
+}
+
+
+
+/* Auxillary Helper Functions */
 function makeCourse(details) {
 	if(details.length != 18){
 		return undefined;
@@ -393,21 +386,20 @@ function makeCourse(details) {
 	}
 
 	// Old json
-	// return {
-	// 	"Subject" : details[0],
-	// 	"Number" : details[1],
-	// 	"Type": details[2],
-	// 	"Method" : details[3],
-	// 	"Section" : details[4],
-	// 	"CRN" : details[5],
-	// 	"Description" : details[6],
-	// 	"Times" : extractTime(details[7]),
-	// 	"Instructor" : details[8]
-	// }
+	/*
+	return {
+		"Subject" : details[0],
+		"Number" : details[1],
+		"Type": details[2],
+		"Method" : details[3],
+		"Section" : details[4],
+		"CRN" : details[5],
+		"Description" : details[6],
+		"Times" : extractTime(details[7]),
+		"Instructor" : details[8]
+	}
+	*/
 }
-
-
-
 function extractTime(lines) {
 	lines = lines.split("\n");
 	let temp = [];
@@ -426,57 +418,6 @@ function extractTime(lines) {
 	}
 	return times;	
 }
-
-
-
-
-
-function combineCourses(termList, allCourses){
-	console.log("Entered combineCourses()");
-
-	// console.log(allCourses.length);
-	saveJSON2(allCourses);
-	// console.log(allCourses);
-
-	let coursesCount = 0;
-	for (course in allCourses) {
-		for (let i=0; i<termList.length; i++) {
-			for (let j=0; j<termList[i].colleges.length; j++) {
-				for (let k=0; k<termList[i].colleges[j].subjects.length; k++) {
-					console.log(i + ", " + j + ", " + k);
-					termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
-					coursesCount++;
-				}
-			}
-		}
-	}
-	// let coursesCount = 0;
-	// for (let i=0; i<termList.length; i++) {
-	// 	for(let j=0; j<termList[i].colleges.length; j++){
-	// 		for(let k=0; k<termList[i].colleges[j].subjects.length; k++){
-	// 			termList[i].colleges[j].subjects[k].courses = allCourses[coursesCount];
-	// 			coursesCount++;
-	// 		}
-	// 	}
-	// }
-
-	console.log(coursesCount);
-	console.log("Success in getCourses");
-	return termList;
-}
-
-let fs = require('fs');
-
-function saveJSON2(termList){
-	let data = JSON.stringify(termList);
-	//should be called from server which has it's home dir in /server/
-	fs.writeFile('../scraper/type.json', data, function(err, data){
-	    if (err) console.log(err);
-	    console.log("Successfully Written to File.");
-	});
-
-}
-
 function saveJSON(termList){
 	let data = JSON.stringify(termList);
 	//should be called from server which has it's home dir in /server/

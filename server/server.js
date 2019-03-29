@@ -248,43 +248,51 @@ async function pushDataToDatabase(){
 	let totalRequests = 0;
 	let actualRequests = 0;
 	console.log("File read");
-	for(term in allCourses){
-		for(college in allCourses[term].colleges){
-			let query = "INSERT INTO updated_courses (term, college, subject, number, type, method, section, crn, title, times, instructor, building, room, campus, credits, enroll, max_enroll, section_comments, textbook, description) VALUES (";
-			for(subject in allCourses[term].colleges[college].subjects){
-				for(course in allCourses[term].colleges[college].subjects[subject].courses){
-					let item = allCourses[term].colleges[college].subjects[subject].courses[course];
-					query += pool.escape(allCourses[term].name);
-					query += ", " + pool.escape(allCourses[term].colleges[college].name);
-					query += ", " + pool.escape(item.Subject);
-					query += ", " + pool.escape(item.Number);
-					query += ", " + pool.escape(item.Type);
-					query += ", " + pool.escape(item.Method);
-					query += ", " + pool.escape(item.Section);
-					query += ", " + pool.escape(item.CRN);
-					query += ", " + pool.escape(item.Title);
-					query += ", " + pool.escape(JSON.stringify(item.Times));
-					query += ", " + pool.escape(item.Instructor);
-					query += ", " + pool.escape(item.Building);
-					query += ", " + pool.escape(item.Room);
-					query += ", " + pool.escape(item.Campus);
-					query += ", " + pool.escape(item.Credits);
-					query += ", " + pool.escape(item.Enroll);
-					query += ", " + pool.escape(item.Max_Enroll);
-					query += ", " + pool.escape(item.Section_Comments);
-					query += ", " + pool.escape(item.Textbook);
-					query += ", " + pool.escape(item.Description);
-					query += "),\n(";
-					totalRequests++;
+	for (term in allCourses) {
+		for (college in allCourses[term].colleges) {
+			for (subject in allCourses[term].colleges[college].subjects) {
+				for (courseLink in allCourses[term].colleges[college].subjects[subject].courseLinks) {
+					// for (course in allCourses[term].colleges[college].subjects[subject].courseLinks[courseLink].courses) {
+						// console.log(allCourses[term].colleges[college].subjects[subject].courseLinks[courseLink].courses[course]);
+					let query = "INSERT INTO updated_courses (term, college, subject, number, type, method, section, crn, title, times, instructor, building, room, campus, credits, enroll, max_enroll, section_comments, textbook, description) VALUES (";
+					// for(subject in allCourses[term].colleges[college].subjects){
+						// for(course in allCourses[term].colleges[college].subjects[subject].courses){
+							let item = allCourses[term].colleges[college].subjects[subject].courseLinks[courseLink].courses;
+							query += pool.escape(allCourses[term].name);
+							query += ", " + pool.escape(allCourses[term].colleges[college].name);
+							query += ", " + pool.escape(item.Subject);
+							query += ", " + pool.escape(item.Number);
+							query += ", " + pool.escape(item.Type);
+							query += ", " + pool.escape(item.Method);
+							query += ", " + pool.escape(item.Section);
+							query += ", " + pool.escape(item.CRN);
+							query += ", " + pool.escape(item.Title);
+							query += ", " + pool.escape(JSON.stringify(item.Times));
+							query += ", " + pool.escape(item.Instructor);
+							query += ", " + pool.escape(item.Building);
+							query += ", " + pool.escape(item.Room);
+							query += ", " + pool.escape(item.Campus);
+							query += ", " + pool.escape(item.Credits);
+							query += ", " + pool.escape(item.Enroll);
+							query += ", " + pool.escape(item.Max_Enroll);
+							query += ", " + pool.escape(item.Section_Comments);
+							query += ", " + pool.escape(item.Textbook);
+							query += ", " + pool.escape(item.Description);
+							query += "),\n(";
+							totalRequests++;
+						// }
+					// }
+					query = query.slice(0,-3) + ";";	
+					actualRequests++;		
+					console.log(query);
+					pool.query(query, (err,rows,field)=>{
+						if(err && !String(err).includes("ER_DUP_ENTRY")){
+							console.log("Error with query\n" + err);
+						}
+					});
+					// }
 				}
 			}
-			query = query.slice(0,-3) + ";";	
-			actualRequests++;		
-			pool.query(query, (err,rows,field)=>{
-				if(err && !String(err).includes("ER_DUP_ENTRY")){
-					console.log("Error with query\n" + err);
-				}
-			});
 		}
 	}
 	console.log("totalRequests: " + totalRequests);
