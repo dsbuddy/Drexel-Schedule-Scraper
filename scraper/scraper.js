@@ -30,7 +30,7 @@ const getTerms = new Promise((resolve, reject)=>{
 			return;
 		});
 		console.log("Success in getTerms()");
-		resolve(termList.slice(0,1));//0,4));//first 4 as they are the ones we care about ie current year
+		resolve(termList.slice(0,4));//0,4));//first 4 as they are the ones we care about ie current year
 	});
 });
 
@@ -72,7 +72,7 @@ function combineColleges(termList, colleges){
 	for( let i=0; i<termList.length; i++){
 		termList[i].colleges=colleges[i];
 	}
-	console.log("Success in getColleges");
+	console.log("Success in getColleges()");
 	return termList;
 }
 
@@ -83,7 +83,7 @@ function combineColleges(termList, colleges){
 const getSubjects = (list)=>{
 	let termList = list;
 	return new Promise((resolve, reject)=>{
-		console.log("Starting getSubjects");
+		console.log("Starting getSubjects()");
 		let promiseArray = [];
 		for (let i=0; i<termList.length; i++) {
 			for(let j=0; j< termList[i].colleges.length; j++){
@@ -91,7 +91,7 @@ const getSubjects = (list)=>{
 					request(termList[i].colleges[j].link, function(error, response, body) {
 						if(error) {
 							console.log(error);
-							reject("Broke in get Subjects");
+							reject("Broke in getSubjects()");
 							return;
 						}
 
@@ -122,7 +122,7 @@ function combineSubjects(termList, subjects) {
 			subjectCount++;
 		}
 	}
-	console.log("Success in getSubjects");
+	console.log("Success in getSubjects()");
 	return termList;
 }
 
@@ -138,16 +138,15 @@ async function getCourses(termList){
 		for(let j=0; j<termList[i].colleges.length; j++){
 			for(let k=0; k<termList[i].colleges[j].subjects.length; k++){
 				let link = termList[i].colleges[j].subjects[k].link;
-				console.log("Getting courses from Link:\n" + link);
+				// console.log("Getting courses from Link:\n" + link);
 
 				let temp = await getCoursesFromLink(link);
-				console.log(temp);
+				// console.log(temp);
 
 				for (let l=0; l<temp.length; l++) {
-					console.log("Parsing: " + temp[l]);
+					// console.log("Parsing: " + temp[l]);
 					let courseFinal = await parseCoursePage(temp[l]);
-					console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-					console.log(courseFinal);
+					// console.log(courseFinal);
 					for (course in courseFinal) {
 						allCourses.push(courseFinal[course]);
 					}
@@ -163,7 +162,7 @@ async function getCourses(termList){
 		}
 	}
 
-	console.log(allCourses.length);
+	// console.log(allCourses.length);
 
 	console.log("Resolving all courses");
 	return combineCourses(termList,allCourses);
@@ -303,7 +302,7 @@ function parseCoursePage(link) {
 					    
 					    // finalCourse is result of JSON format of class
 					    finalCourse = makeCourse(details);
-					    console.log(finalCourse);
+					    // console.log(finalCourse);
 
 					    // Pushes course to allCourses array
 					    allCourses.push(finalCourse);
@@ -328,7 +327,7 @@ function parseCoursePage(link) {
 
 function combineCourses(termList, allCourses){
 	console.log("Entered combineCourses()");
-	console.log("\n\n\n\n\n\n\n\n\n" + JSON.stringify(allCourses));
+	// console.log("\n\n\n\n\n\n\n\n\n" + JSON.stringify(allCourses));
 
 	let coursesCount = 0;
 	for (course in allCourses) {
@@ -350,8 +349,8 @@ function combineCourses(termList, allCourses){
 		}
 	}
 
-	console.log(allCourses.length)
-	console.log(coursesCount);
+	// console.log(allCourses.length)
+	// console.log(coursesCount);
 	console.log("Success in getCourses()");
 	return termList;
 }

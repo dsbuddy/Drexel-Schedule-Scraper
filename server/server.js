@@ -236,6 +236,33 @@ app.get("/allClasses", (req,res)=>{
 	});
 });
 
+app.get("/runScraper", (req,res)=>{
+	console.log("Calling runScraper");
+
+
+	// const exec = require('child_process').exec;
+	// const child = exec('ls', (error, stdout, stderr) => {
+	//         console.log(`stdout: ${stdout}`);
+	//         console.log(`stderr: ${stderr}`);
+	//         if (error !== null) {
+	//             console.log(`exec error: ${error}`);
+	//         }
+	// });
+
+
+	const exec = require('child_process').exec;
+	const child = exec('cd server ; node ../scraper/scraper.js', (error, stdout, stderr) => {
+	        console.log(`stdout: ${stdout}`);
+	        console.log(`stderr: ${stderr}`);
+	        if (error !== null) {
+	            console.log(`exec error: ${error}`);
+	        }
+	});
+
+
+	console.log("Done scraper");
+})
+
 app.get("/pushDatabase",(req,res)=>{
 	console.log("Calling pushDataToDatabase");
 	pushDataToDatabase();
@@ -290,7 +317,7 @@ async function pushDataToDatabase(){
 					// }
 					query = query.slice(0,-3) + ";";	
 					actualRequests++;		
-					console.log(query);
+					// console.log(query);
 					pool.query(query, (err,rows,field)=>{
 						if(err && !String(err).includes("ER_DUP_ENTRY")){
 							console.log("Error with query\n" + err);
