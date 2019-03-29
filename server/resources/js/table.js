@@ -223,15 +223,7 @@ function runAPI(){
           data[elem].times = data[elem].times.replace(/}/g, '');
           data[elem].times = data[elem].times.replace(/,/g, '<br><br>');
         }
-      //   for (textbook in elem) {
-      //     if (data[elem].textbook != null) {
-      //       // var temp2 = '<a href="' + data[elem].textbook + '">'+ data[elem].subject + data[elem].number + 'Textbook</a>';
-      //       // data[elem].textbook = temp2;
-      //       data[elem].textbook ='<a href="' + data[elem].textbook + '">'+ data[elem].subject + data[elem].number + ' Textbook</a>';
-      //     } else {
-      //       data[elem].textbook = "<p>No Textbook Found</p>";
-      //   }
-      // }
+      }
 
       $('#content').html("");
       $('#tmsTable').show();
@@ -245,8 +237,7 @@ function runAPI(){
         });
       });
     }
-  }
+  })
 
-  // console.log($('#tmsTable').html());
-});
+  console.log($('#tmsTable').html());
 }

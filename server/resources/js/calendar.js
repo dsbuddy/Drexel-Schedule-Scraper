@@ -1,8 +1,6 @@
 /* Global variable that indicates what schedule of allSchedules is to be shown */
 var indx = 0;
 
-var randomDays = ['M', 'T', 'W', 'R', 'F', 'S'];
-
 
 /* Updates events on calendar */
 function updateEvents(indx) {
@@ -15,9 +13,8 @@ function updateEvents(indx) {
 		var online = false;
 		/* If online class set class to show on Monday */
 		if (times['T'] == 'TBD') {
-			var day = Math.floor(Math.random() * (5-0+1)) + 0;
 			times = {
-				randomDays[day] : '12:00am-12:00pm'
+				'M': '12:00am-12:00pm'
 			};
 			online = true;
 		}
@@ -36,7 +33,7 @@ function updateEvents(indx) {
 
 /* Creates string for popover to display course info */
 function createContent(course) {
-	var res = course.title + ' - <b>Instructor:</b> ' + course.instructor + '<br /><b>Type:</b> ' + course.type + '<br /><b>Section:</b> ' + course.section + '<br /><b>CRN:</b> ' + course.crn + '<br /><b>Location:</b> ' + course.room + ' , ' + course.building + '<br /><b>Enrollment: </b>' + course.enroll + ' / ' + course.max_enroll + '<br /><b>Section Comments: </b>' + course.section_comments + '<br /><b><a href = "' + course.textbook + '">Textbook</a></b>';
+	var res = course.title + ' - <b>Instructor:</b> ' + course.instructor + '<br /><b>Type:</b> ' + course.type + '<br /><b>Method:</b> ' + course.method + '<br /><b>Section:</b> ' + course.section + '<br /><b>Building:</b> ' + course.building + '<br /><b>Room:</b> ' + course.room + '<br /><b>CRN:</b> ' + course.crn + '<br /><b>Enroll:</b> ' + course.enroll + '/' + course.max_enroll + '<br /><b>Credits:</b> ' + course.credits;
 	return res;
 }
 

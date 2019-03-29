@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8' />
+	<!-- JQUERY -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+
+	<!-- Calendar -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<link rel='stylesheet' href='/resources/js/fullcalendar/fullcalendar.min.css'></link>
+	<script src='/resources/js/fullcalendar/lib/moment.min.js'></script>
+	<script src='/resources/js/fullcalendar/lib/jquery.min.js'></script>
+	<script src='/resources/js/fullcalendar/fullcalendar.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'></script>
+	<!-- BootStrap -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'></link>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha256-BJ/G+e+y7bQdrYkS2RBTyNfBHpA9IuGaPmf9htub5MQ=" crossorigin="anonymous" />
+	<!-- clientside code -->
+  <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+  	<link rel="stylesheet" href="/resources/css/select.css" />
+	<script src="/resources/js/select.js"></script>
+	<script src="/resources/js/scheduler.js"></script>
+
+    <!-- Custom styles for this template -->
+    <title>Schedule Boy</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  		<a class="navbar-brand" href="/index">Schedule Boy</a>
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="/index">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/select">Create Schedule</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/table">TMS</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#">About</a>
+			</li>
+		</ul>
+	</nav>
+	<div id="content" class="container">
+		<br><br><br><br>
+		<center><h1 id="drexelschedulehelper">Drexel-Schedule-Helper</h1>
+
+		<p>A project that intends to help Drexel students plan out their schedules for classes.</p>
+
+		<h1 id="requiredsoftware">Required software</h1>
+
+		<li>Node.JS</li>
+		<li>npm</li>
+		<li>MySQL server</li>
+
+		<h1 id="howtorunthiscode">How to run this code</h1>
+
+		<p>We are using a heroku instance to run this app, which can be found at <a href="http://scheduleboy.herokuapp.com">scheduleboy.herokuapp.com</a>. If you want to run it locally, you can run <code>npm install</code> to install all the required packages. Then run <code>node server.js</code> to run the server code and go to <code>localhost:8080</code> in your browser.</p>
+
+		<h1 id="howtousetheapp">How to use the app</h1>
+
+		<p>First, click on Create Schedule. This will take you to a page where you can select what term you want to schedule for. Next, enter all the classes you want to take this term, which can be auto-completed. Enter any restrictions you want, such as no class on Friday, or no classes after 5:00PM. Finally, click Find Schedules and our app will find all the possible schedules for that you can take with those classes. It may take a little while if there are a lot of sections for each class.</p></center>
+	</div>
+</body>
+</html>

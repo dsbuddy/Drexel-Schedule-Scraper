@@ -54,9 +54,15 @@ app.get("/select", (req,res)=>{
 	res.end();
 });
 
-//select courses page
+//tms page
 app.get("/table", (req,res)=>{
 	res.write(fs.readFileSync(__dirname + "/resources/html/table.html"));
+	res.end();
+});
+
+//about page
+app.get("/about", (req,res)=>{
+	res.write(fs.readFileSync(__dirname + "/resources/html/about.html"));
 	res.end();
 });
 
