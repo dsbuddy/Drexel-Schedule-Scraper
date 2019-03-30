@@ -238,7 +238,7 @@ app.get("/allClasses", (req,res)=>{
 
 
 app.get("/runScraper", (req,res)=>{
-	req.setTimeout(0);
+	req.setTimeout(0); // Using this -> https://github.com/expressjs/express/issues/2174
 	console.log("Calling runScraper");
 
 
@@ -295,6 +295,7 @@ async function pushDataToDatabase(){
 					let query = "INSERT INTO updated_courses (term, college, subject, number, type, method, section, crn, title, times, instructor, building, room, campus, credits, enroll, max_enroll, section_comments, textbook, description) VALUES ?";
 					
 					let item = allCourses[term].colleges[college].subjects[subject].courseLinks[courseLink].courses;
+					let temp = [];
 					temp.push(pool.escape(allCourses[term].name));
 					temp.push(pool.escape(allCourses[term].colleges[college].name));
 					temp.push(pool.escape(item.Subject));
